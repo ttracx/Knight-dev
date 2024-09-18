@@ -141,5 +141,5 @@ export function mergeJson(
 }
 
 function getExtensionUri(): vscode.Uri {
-	return vscode.extensions.getExtension("saoudrizwan.knight-dev")!.extensionUri
+	return vscode.extensions.getExtension("ttracx.knight-dev")!.extensionUri
 }

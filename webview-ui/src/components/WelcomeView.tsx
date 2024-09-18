@@ -28,13 +28,13 @@ const WelcomeView = () => {
 				<VSCodeLink
 					href="https://www-cdn.anthropic.com/fed9cc193a14b84131812372d8d5857f8f304c52/Model_Card_Knight_3_Addendum.pdf"
 					style={{ display: "inline" }}>
-					Knight 3.5 Sonnet's agentic coding capabilities
+					Claude 3.5 Sonnet's agentic coding capabilities
 				</VSCodeLink>{" "}
 				and access to tools that let me create & edit files, explore complex projects, and execute terminal
 				commands (with your permission, of course).
 			</p>
 
-			<b>To get started, this extension needs an API provider for Knight 3.5 Sonnet.</b>
+			<b>To get started, this extension needs an API provider for Claude 3.5 Sonnet.</b>
 
 			<div style={{ marginTop: "10px" }}>
 				<ApiOptions showModelOptions={false} />

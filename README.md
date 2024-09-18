@@ -1,14 +1,14 @@
 # Knight Dev
 
 <p align="center">
-  <img src="https://media.githubusercontent.com/media/saoudrizwan/knight-dev/main/demo.gif" width="100%" />
+  <img src="https://media.githubusercontent.com/media/ttracx/knight-dev/main/demo.gif" width="100%" />
 </p>
 
 <p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=saoudrizwan.knight-dev" target="_blank"><strong>Download VSCode Extension</strong></a> | <a href="https://discord.gg/knightdev" target="_blank"><strong>Join the Discord</strong></a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=ttracx.knight-dev" target="_blank"><strong>Download VSCode Extension</strong></a> | <a href="https://discord.gg/knightdev" target="_blank"><strong>Join the Discord</strong></a>
 </p>
 
-Thanks to [Knight 3.5 Sonnet's agentic coding capabilities](https://www-cdn.anthropic.com/fed9cc193a14b84131812372d8d5857f8f304c52/Model_Card_Knight_3_Addendum.pdf) Knight Dev can handle complex software development tasks step-by-step. With tools that let him create & edit files, explore complex projects, and execute terminal commands (after you grant permission), he can assist you in ways that go beyond simple code completion or tech support. While autonomous AI scripts traditionally run in sandboxed environments, Knight Dev provides a human-in-the-loop GUI to supervise every file changed and command executed, providing a safe and accessible way to explore the potential of agentic AI.
+Thanks to [Claude 3.5 Sonnet's agentic coding capabilities](https://www-cdn.anthropic.com/fed9cc193a14b84131812372d8d5857f8f304c52/Model_Card_Knight_3_Addendum.pdf) Knight Dev can handle complex software development tasks step-by-step. With tools that let him create & edit files, explore complex projects, and execute terminal commands (after you grant permission), he can assist you in ways that go beyond simple code completion or tech support. While autonomous AI scripts traditionally run in sandboxed environments, Knight Dev provides a human-in-the-loop GUI to supervise every file changed and command executed, providing a safe and accessible way to explore the potential of agentic AI.
 
 -   Paste images in chat to use Knight's vision capabilities and turn mockups into fully functional applications or fix bugs with screenshots
 -   Review and edit diffs of every change Knight makes right in the editor, or provide feedback in chat until you're satisfied with the result
@@ -41,7 +41,7 @@ Knight Dev has access to the following capabilities:
 
 When given a task in an existing project, Knight will look for the most relevant files to read and edit the same way you or I would–by first looking at the names of directories, files, classes, and functions since these names tend to reflect their purpose and role within the broader system, and often encapsulate high-level concepts and relationships that help understand a project's overall architecture. With tools like `list_code_definition_names` and `search_files`, Knight is able to extract names of various elements in a project to determine what files are most relevant to a given task without you having to mention `@file`s or `@folder`s yourself.
 
-1. **File Structure**: When a task is started, Knight is given an overview of your project's file structure. It turns out Knight 3.5 Sonnet is _really_ good at inferring what it needs to process further just from these file names alone.
+1. **File Structure**: When a task is started, Knight is given an overview of your project's file structure. It turns out Claude 3.5 Sonnet is _really_ good at inferring what it needs to process further just from these file names alone.
 
 2. **Source Code Definitions**: Knight may then use the `list_code_definition_names` tool on specific directories of interest. This tool uses [tree-sitter](https://github.com/tree-sitter/tree-sitter) to parse source code with custom tag queries that extract names of classes, functions, methods, and other definitions. It works by first identifying source code files that tree-sitter can parse (currently supports `python`, `javascript`, `typescript`, `ruby`, `go`, `java`, `php`, `rust`, `c`, `c++`, `c#`, `swift`), then parsing each file into an abstract syntax tree, and finally applying a language-specific query to extract definition names (you can see the exact query used for each language in `src/parse-source-code/queries`). The results are formatted into a concise & readable output that Knight can easily interpret to quickly understand the code's structure and purpose.
 
@@ -55,17 +55,17 @@ By carefully managing what information is added to context, Knight can provide v
 
 Knight always asks for your permission first before any tools are executed or information is sent back to the API. This puts you in control of this agentic loop, every step of the way.
 
-![image](https://github.com/saoudrizwan/knight-dev/assets/7799382/e6435441-9400-41c9-98a9-63f75c5d45be)
+![image](https://github.com/ttracx/knight-dev/assets/7799382/e6435441-9400-41c9-98a9-63f75c5d45be)
 
 ## Contribution
 
-Paul Graham said it best, "if you build something now that barely works with AI, the next models will make it _really_ work." I've built this project with the assumption that scaling laws will continue to improve the quality (and cost) of AI models, and what might be difficult for Knight 3.5 Sonnet today will be effortless for future generations. That is the design philosophy I'd like to develop this project with, so it will always be updated with the best models, tools, and capabilities available–without wasting effort on implementing stopgaps like cheaper agents. With that said, I'm always open to suggestions and feedback, so please feel free to contribute to this project by submitting issues and pull requests.
+Paul Graham said it best, "if you build something now that barely works with AI, the next models will make it _really_ work." I've built this project with the assumption that scaling laws will continue to improve the quality (and cost) of AI models, and what might be difficult for Claude 3.5 Sonnet today will be effortless for future generations. That is the design philosophy I'd like to develop this project with, so it will always be updated with the best models, tools, and capabilities available–without wasting effort on implementing stopgaps like cheaper agents. With that said, I'm always open to suggestions and feedback, so please feel free to contribute to this project by submitting issues and pull requests.
 
 To build Knight Dev locally, follow these steps:
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/saoudrizwan/knight-dev.git
+    git clone https://github.com/ttracx/knight-dev.git
     ```
 2. Open the project in VSCode:
     ```bash
@@ -79,7 +79,7 @@ To build Knight Dev locally, follow these steps:
 
 ## Reviews
 
--   ["VSCode + KnightDev + Continue: Stop Paying for Cursor with this OPENSOURCE & LOCAL Alternative"](https://www.youtube.com/watch?v=ucalLC8k94w), ["Knight Dev: This Coding Agent can Generate Applications Within VS Code!"](https://www.youtube.com/watch?v=ufq6sHGe0zs), ["KnightDev (Upgraded) : The BEST Coding Agent just got OLLAMA Support, Groq & Other Cool Updates!"](https://www.youtube.com/watch?v=QOG8qArZakg), ["KnightDev + NextJS + Supabase: Generate FULL-STACK Apps with Knight 3.5 Sonnet"](https://www.youtube.com/watch?v=GeZBfO1kxA4), ["KnightDev + Gemini : Generate Applications for FREE with Gemini 1.5 Pro / Flash!"](https://www.youtube.com/watch?v=FAFmP82bhDA), ["KnightDev (Upgraded) : The BEST Coding Agent just got Opensource LLM & Multimodal Support + Caching!"](https://www.youtube.com/watch?v=66b3qHPnKWM) by [AICodeKing](https://www.youtube.com/@AICodeKing)
+-   ["VSCode + KnightDev + Continue: Stop Paying for Cursor with this OPENSOURCE & LOCAL Alternative"](https://www.youtube.com/watch?v=ucalLC8k94w), ["Knight Dev: This Coding Agent can Generate Applications Within VS Code!"](https://www.youtube.com/watch?v=ufq6sHGe0zs), ["KnightDev (Upgraded) : The BEST Coding Agent just got OLLAMA Support, Groq & Other Cool Updates!"](https://www.youtube.com/watch?v=QOG8qArZakg), ["KnightDev + NextJS + Supabase: Generate FULL-STACK Apps with Claude 3.5 Sonnet"](https://www.youtube.com/watch?v=GeZBfO1kxA4), ["KnightDev + Gemini : Generate Applications for FREE with Gemini 1.5 Pro / Flash!"](https://www.youtube.com/watch?v=FAFmP82bhDA), ["KnightDev (Upgraded) : The BEST Coding Agent just got Opensource LLM & Multimodal Support + Caching!"](https://www.youtube.com/watch?v=66b3qHPnKWM) by [AICodeKing](https://www.youtube.com/@AICodeKing)
 -   ["KnightDev: NEW Coding Agent Can Generate Applications within VS Code!"](https://www.youtube.com/watch?v=UNsQHosbIoE), ["VSCode + KnightDev: FREE Alternative Thats OPENSOURCE & LOCAL!"](https://www.youtube.com/watch?v=-vBNjoi_gJg) by [WorldofAI](https://www.youtube.com/@intheworldofai)
 -   ["Knight Sonnet 3.5 Artifacts in VSCode With This Extension"](https://www.youtube.com/watch?v=5FbZ8ALfSTs) by [CoderOne](https://www.youtube.com/@CoderOne)
 -   ["Fully automated game development with a single prompt!"](https://www.youtube.com/watch?v=n18L9VFhNDo), ["Knight Dev fully automated writing code to develop chatbots! Beyond Copilot!"](https://www.youtube.com/watch?v=Us6LQzKmgfs) by [AIsuperdomain](https://www.youtube.com/@AIsuperdomain)
@@ -99,7 +99,7 @@ This project is licensed under the MIT License. See the [LICENSE](./LICENSE) fil
 
 ## Questions?
 
-Contact me on X <a href="https://x.com/sdrzn" target="_blank">@sdrzn</a>. Please create an <a href="https://github.com/saoudrizwan/knight-dev/issues">issue</a> if you come across a bug or would like a feature to be added.
+Contact me on X <a href="https://x.com/sdrzn" target="_blank">@sdrzn</a>. Please create an <a href="https://github.com/ttracx/knight-dev/issues">issue</a> if you come across a bug or would like a feature to be added.
 
 ## Acknowledgments
 
