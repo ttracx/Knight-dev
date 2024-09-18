@@ -253,7 +253,7 @@ export class KnightDev {
 	private customInstructions?: string
 	private alwaysAllowReadOnly: boolean
 	apiConversationHistory: Anthropic.MessageParam[] = []
-	knightMessages: KnightMessage[] = []
+	KnightMessages: KnightMessage[] = []
 	private askResponse?: KnightAskResponse
 	private askResponseText?: string
 	private askResponseImages?: string[]
@@ -351,7 +351,7 @@ export class KnightDev {
 	}
 
 	private async getSavedKnightMessages(): Promise<KnightMessage[]> {
-		const filePath = path.join(await this.ensureTaskDirectoryExists(), "knight_messages.json")
+		const filePath = path.join(await this.ensureTaskDirectoryExists(), "Knight_messages.json")
 		const fileExists = await fs
 			.access(filePath)
 			.then(() => true)
@@ -363,26 +363,26 @@ export class KnightDev {
 	}
 
 	private async addToKnightMessages(message: KnightMessage) {
-		this.knightMessages.push(message)
+		this.KnightMessages.push(message)
 		await this.saveKnightMessages()
 	}
 
 	private async overwriteKnightMessages(newMessages: KnightMessage[]) {
-		this.knightMessages = newMessages
+		this.KnightMessages = newMessages
 		await this.saveKnightMessages()
 	}
 
 	private async saveKnightMessages() {
 		try {
-			const filePath = path.join(await this.ensureTaskDirectoryExists(), "knight_messages.json")
-			await fs.writeFile(filePath, JSON.stringify(this.knightMessages))
+			const filePath = path.join(await this.ensureTaskDirectoryExists(), "Knight_messages.json")
+			await fs.writeFile(filePath, JSON.stringify(this.KnightMessages))
 			// combined as they are in ChatView
-			const apiMetrics = getApiMetrics(combineApiRequests(combineCommandSequences(this.knightMessages.slice(1))))
-			const taskMessage = this.knightMessages[0] // first message is always the task say
+			const apiMetrics = getApiMetrics(combineApiRequests(combineCommandSequences(this.KnightMessages.slice(1))))
+			const taskMessage = this.KnightMessages[0] // first message is always the task say
 			const lastRelevantMessage =
-				this.knightMessages[
+				this.KnightMessages[
 					findLastIndex(
-						this.knightMessages,
+						this.KnightMessages,
 						(m) => !(m.ask === "resume_task" || m.ask === "resume_completed_task")
 					)
 				]
@@ -397,7 +397,7 @@ export class KnightDev {
 				totalCost: apiMetrics.totalCost,
 			})
 		} catch (error) {
-			console.error("Failed to save knight messages:", error)
+			console.error("Failed to save Knight messages:", error)
 		}
 	}
 
@@ -405,7 +405,7 @@ export class KnightDev {
 		type: KnightAsk,
 		question?: string
 	): Promise<{ response: KnightAskResponse; text?: string; images?: string[] }> {
-		// If this KnightDev instance was aborted by the provider, then the only thing keeping us alive is a promise still running in the background, in which case we don't want to send its result to the webview as it is attached to a new instance of KnightDev now. So we can safely ignore the result of any active promises, and this class will be deallocated. (Although we set knightDev = undefined in provider, that simply removes the reference to this instance, but the instance is still alive until this promise resolves or rejects.)
+		// If this KnightDev instance was aborted by the provider, then the only thing keeping us alive is a promise still running in the background, in which case we don't want to send its result to the webview as it is attached to a new instance of KnightDev now. So we can safely ignore the result of any active promises, and this class will be deallocated. (Although we set KnightDev = undefined in provider, that simply removes the reference to this instance, but the instance is still alive until this promise resolves or rejects.)
 		if (this.abort) {
 			throw new Error("KnightDev instance aborted")
 		}
@@ -438,9 +438,9 @@ export class KnightDev {
 	}
 
 	private async startTask(task?: string, images?: string[]): Promise<void> {
-		// conversationHistory (for API) and knightMessages (for webview) need to be in sync
-		// if the extension process were killed, then on restart the knightMessages might not be empty, so we need to set it to [] when we create a new KnightDev client (otherwise webview would show stale messages from previous session)
-		this.knightMessages = []
+		// conversationHistory (for API) and KnightMessages (for webview) need to be in sync
+		// if the extension process were killed, then on restart the KnightMessages might not be empty, so we need to set it to [] when we create a new KnightDev client (otherwise webview would show stale messages from previous session)
+		this.KnightMessages = []
 		this.apiConversationHistory = []
 		await this.providerRef.deref()?.postStateToWebview()
 
@@ -459,7 +459,7 @@ export class KnightDev {
 	private async resumeTaskFromHistory() {
 		const modifiedKnightMessages = await this.getSavedKnightMessages()
 
-		// Need to modify knight messages for good ux, i.e. if the last message is an api_request_started, then remove it otherwise the user will think the request is still loading
+		// Need to modify Knight messages for good ux, i.e. if the last message is an api_request_started, then remove it otherwise the user will think the request is still loading
 		const lastApiReqStartedIndex = modifiedKnightMessages.reduce(
 			(lastIndex, m, index) => (m.type === "say" && m.say === "api_req_started" ? index : lastIndex),
 			-1
@@ -482,17 +482,17 @@ export class KnightDev {
 		}
 
 		await this.overwriteKnightMessages(modifiedKnightMessages)
-		this.knightMessages = await this.getSavedKnightMessages()
+		this.KnightMessages = await this.getSavedKnightMessages()
 
-		// Now present the knight messages to the user and ask if they want to resume
+		// Now present the Knight messages to the user and ask if they want to resume
 
-		const lastKnightMessage = this.knightMessages
+		const lastKnightMessage = this.KnightMessages
 			.slice()
 			.reverse()
 			.find((m) => !(m.ask === "resume_task" || m.ask === "resume_completed_task")) // could be multiple resume tasks
-		// const lastKnightMessage = this.knightMessages[lastKnightMessageIndex]
+		// const lastKnightMessage = this.KnightMessages[lastKnightMessageIndex]
 		// could be a completion result with a command
-		// const secondLastKnightMessage = this.knightMessages
+		// const secondLastKnightMessage = this.KnightMessages
 		// 	.slice()
 		// 	.reverse()
 		// 	.find(
@@ -517,7 +517,7 @@ export class KnightDev {
 			responseImages = images
 		}
 
-		// need to make sure that the api conversation history can be resumed by the api, even if it goes out of sync with knight messages
+		// need to make sure that the api conversation history can be resumed by the api, even if it goes out of sync with Knight messages
 
 		// if the last message is an assistant message, we need to check if there's tool use since every tool use has to have a tool response
 		// if there's no tool use and only a text block, then we can just add a user message
@@ -647,7 +647,7 @@ export class KnightDev {
 			const { didEndLoop } = await this.recursivelyMakeKnightRequests(nextUserContent, includeFileDetails)
 			includeFileDetails = false // we only need file details the first time
 
-			//  The way this agentic loop works is that knight will be given a task that he then calls tools to complete. unless there's an attempt_completion call, we keep responding back to him with his tool's responses until he either attempt_completion or does not use anymore tools. If he does not use anymore tools, we ask him to consider if he's completed the task and then call attempt_completion, otherwise proceed with completing the task.
+			//  The way this agentic loop works is that Knight will be given a task that he then calls tools to complete. unless there's an attempt_completion call, we keep responding back to him with his tool's responses until he either attempt_completion or does not use anymore tools. If he does not use anymore tools, we ask him to consider if he's completed the task and then call attempt_completion, otherwise proceed with completing the task.
 			// There is a MAX_REQUESTS_PER_TASK limit to prevent infinite requests, but Knight is prompted to finish the task as efficiently as he can.
 
 			//const totalCost = this.calculateApiCost(totalInputTokens, totalOutputTokens)
@@ -760,7 +760,7 @@ export class KnightDev {
 			let originalContent: string
 			if (fileExists) {
 				originalContent = await fs.readFile(absolutePath, "utf-8")
-				// fix issue where knight always removes newline from the file
+				// fix issue where Knight always removes newline from the file
 				const eol = originalContent.includes("\r\n") ? "\r\n" : "\n"
 				if (originalContent.endsWith(eol) && !newContent.endsWith(eol)) {
 					newContent += eol
@@ -809,7 +809,7 @@ export class KnightDev {
 			// Show diff
 			await vscode.commands.executeCommand(
 				"vscode.diff",
-				vscode.Uri.parse(`knight-dev-diff:${fileName}`).with({
+				vscode.Uri.parse(`Knight-dev-diff:${fileName}`).with({
 					query: Buffer.from(originalContent).toString("base64"),
 				}),
 				updatedDocument.uri,
@@ -919,7 +919,7 @@ export class KnightDev {
 			// 	// 	console.log(`Could not open editor for ${absolutePath}: ${error}`)
 			// 	// }
 			// 	// await delay(50)
-			// 	// // Wait for the in-memory document to become the active editor (sometimes vscode timing issues happen and this would accidentally close knight dev!)
+			// 	// // Wait for the in-memory document to become the active editor (sometimes vscode timing issues happen and this would accidentally close Knight dev!)
 			// 	// await pWaitFor(
 			// 	// 	() => {
 			// 	// 		return vscode.window.activeTextEditor?.document === inMemoryDocument
@@ -1125,7 +1125,7 @@ export class KnightDev {
 			.flat()
 			.filter(
 				(tab) =>
-					tab.input instanceof vscode.TabInputTextDiff && tab.input?.original?.scheme === "knight-dev-diff"
+					tab.input instanceof vscode.TabInputTextDiff && tab.input?.original?.scheme === "Knight-dev-diff"
 			)
 
 		for (const tab of tabs) {
@@ -1239,7 +1239,7 @@ export class KnightDev {
 			if (absolutePath.includes(cwd)) {
 				return normalizedRelPath
 			} else {
-				// we are outside the cwd, so show the absolute path (useful for when knight passes in '../../' for example)
+				// we are outside the cwd, so show the absolute path (useful for when Knight passes in '../../' for example)
 				return absolutePath
 			}
 		}
@@ -1252,7 +1252,7 @@ export class KnightDev {
 				const relativePath = path.relative(absolutePath, file)
 				return file.endsWith("/") ? relativePath + "/" : relativePath
 			})
-			// Sort so files are listed under their respective directories to make it clear what files are children of what directories. Since we build file list top down, even if file list is truncated it will show directories that knight can then explore further.
+			// Sort so files are listed under their respective directories to make it clear what files are children of what directories. Since we build file list top down, even if file list is truncated it will show directories that Knight can then explore further.
 			.sort((a, b) => {
 				const aParts = a.split("/")
 				const bParts = b.split("/")
@@ -1507,7 +1507,7 @@ export class KnightDev {
 		let resultToSend = result
 		if (command) {
 			await this.say("completion_result", resultToSend)
-			// TODO: currently we don't handle if this command fails, it could be useful to let knight know and retry
+			// TODO: currently we don't handle if this command fails, it could be useful to let Knight know and retry
 			const [didUserReject, commandResult] = await this.executeCommand(command, true)
 			// if we received non-empty string, the command was rejected or failed
 			if (commandResult) {
@@ -1546,7 +1546,7 @@ ${this.customInstructions.trim()}
 			}
 
 			// If the last API request's total token usage is close to the context window, truncate the conversation history to free up space for the new request
-			const lastApiReqFinished = findLast(this.knightMessages, (m) => m.say === "api_req_finished")
+			const lastApiReqFinished = findLast(this.KnightMessages, (m) => m.say === "api_req_finished")
 			if (lastApiReqFinished && lastApiReqFinished.text) {
 				const {
 					tokensIn,
@@ -1599,9 +1599,9 @@ ${this.customInstructions.trim()}
 		if (this.consecutiveMistakeCount >= 3) {
 			const { response, text, images } = await this.ask(
 				"mistake_limit_reached",
-				this.api.getModel().id.includes("knight")
+				this.api.getModel().id.includes("Knight")
 					? `This may indicate a failure in his thought process or inability to use a tool properly, which can be mitigated with some user guidance (e.g. "Try breaking down the task into smaller steps").`
-					: "Knight Dev uses complex prompts and iterative task execution that may be challenging for less capable models. For best results, it's recommended to use Claude 3.5 Sonnet for its advanced agentic coding capabilities."
+					: "Knight Dev uses complex prompts and iterative task execution that may be challenging for less capable models. For best results, it's recommended to use Knight 3.5 Sonnet for its advanced agentic coding capabilities."
 			)
 			if (response === "messageResponse") {
 				userContent.push(
@@ -1638,8 +1638,8 @@ ${this.customInstructions.trim()}
 		await this.addToApiConversationHistory({ role: "user", content: userContent })
 
 		// since we sent off a placeholder api_req_started message to update the webview while waiting to actually start the API request (to load potential details for example), we need to update the text of that message
-		const lastApiReqIndex = findLastIndex(this.knightMessages, (m) => m.say === "api_req_started")
-		this.knightMessages[lastApiReqIndex].text = JSON.stringify({
+		const lastApiReqIndex = findLastIndex(this.KnightMessages, (m) => m.say === "api_req_started")
+		this.KnightMessages[lastApiReqIndex].text = JSON.stringify({
 			request: userContent
 				.map((block) => formatContentBlockToMarkdown(block, this.apiConversationHistory))
 				.join("\n\n"),
@@ -1744,7 +1744,7 @@ ${this.customInstructions.trim()}
 			let didEndLoop = false
 
 			// attempt_completion is always done last, since there might have been other tools that needed to be called first before the job is finished
-			// it's important to note that knight will order the tools logically in most cases, so we don't have to think about which tools make sense calling before others
+			// it's important to note that Knight will order the tools logically in most cases, so we don't have to think about which tools make sense calling before others
 			if (attemptCompletionBlock) {
 				let [_, result] = await this.executeTool(
 					attemptCompletionBlock.name as ToolName,
@@ -1824,7 +1824,7 @@ ${this.customInstructions.trim()}
 	async getEnvironmentDetails(includeFileDetails: boolean = false) {
 		let details = ""
 
-		// It could be useful for knight to know if the user went from one or no file to another between messages, so we always include this context
+		// It could be useful for Knight to know if the user went from one or no file to another between messages, so we always include this context
 		details += "\n\n# VSCode Visible Files"
 		const visibleFiles = vscode.window.visibleTextEditors
 			?.map((editor) => editor.document?.uri?.fsPath)
@@ -1872,7 +1872,7 @@ ${this.customInstructions.trim()}
 		// we want to get diagnostics AFTER terminal cools down for a few reasons: terminal could be scaffolding a project, dev servers (compilers like webpack) will first re-compile and then send diagnostics, etc
 		/*
 		let diagnosticsDetails = ""
-		const diagnostics = await this.diagnosticsMonitor.getCurrentDiagnostics(this.didEditFile || terminalWasBusy) // if knight ran a command (ie npm install) or edited the workspace then wait a bit for updated diagnostics
+		const diagnostics = await this.diagnosticsMonitor.getCurrentDiagnostics(this.didEditFile || terminalWasBusy) // if Knight ran a command (ie npm install) or edited the workspace then wait a bit for updated diagnostics
 		for (const [uri, fileDiagnostics] of diagnostics) {
 			const problems = fileDiagnostics.filter((d) => d.severity === vscode.DiagnosticSeverity.Error)
 			if (problems.length > 0) {

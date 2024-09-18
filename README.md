@@ -77,22 +77,6 @@ To build Knight Dev locally, follow these steps:
     ```
 4. Launch by pressing `F5` (or `Run`->`Start Debugging`) to open a new VSCode window with the extension loaded. (You may need to install the [esbuild problem matchers extension](https://marketplace.visualstudio.com/items?itemName=connor4312.esbuild-problem-matchers) if you run into issues building the project.)
 
-## Reviews
-
--   ["VSCode + KnightDev + Continue: Stop Paying for Cursor with this OPENSOURCE & LOCAL Alternative"](https://www.youtube.com/watch?v=ucalLC8k94w), ["Knight Dev: This Coding Agent can Generate Applications Within VS Code!"](https://www.youtube.com/watch?v=ufq6sHGe0zs), ["KnightDev (Upgraded) : The BEST Coding Agent just got OLLAMA Support, Groq & Other Cool Updates!"](https://www.youtube.com/watch?v=QOG8qArZakg), ["KnightDev + NextJS + Supabase: Generate FULL-STACK Apps with Claude 3.5 Sonnet"](https://www.youtube.com/watch?v=GeZBfO1kxA4), ["KnightDev + Gemini : Generate Applications for FREE with Gemini 1.5 Pro / Flash!"](https://www.youtube.com/watch?v=FAFmP82bhDA), ["KnightDev (Upgraded) : The BEST Coding Agent just got Opensource LLM & Multimodal Support + Caching!"](https://www.youtube.com/watch?v=66b3qHPnKWM) by [AICodeKing](https://www.youtube.com/@AICodeKing)
--   ["KnightDev: NEW Coding Agent Can Generate Applications within VS Code!"](https://www.youtube.com/watch?v=UNsQHosbIoE), ["VSCode + KnightDev: FREE Alternative Thats OPENSOURCE & LOCAL!"](https://www.youtube.com/watch?v=-vBNjoi_gJg) by [WorldofAI](https://www.youtube.com/@intheworldofai)
--   ["Knight Sonnet 3.5 Artifacts in VSCode With This Extension"](https://www.youtube.com/watch?v=5FbZ8ALfSTs) by [CoderOne](https://www.youtube.com/@CoderOne)
--   ["Fully automated game development with a single prompt!"](https://www.youtube.com/watch?v=n18L9VFhNDo), ["Knight Dev fully automated writing code to develop chatbots! Beyond Copilot!"](https://www.youtube.com/watch?v=Us6LQzKmgfs) by [AIsuperdomain](https://www.youtube.com/@AIsuperdomain)
--   ["KnightDev: This Mind-Blowing Coding Agent Can Build SaaS Apps in Minutes!"](https://www.youtube.com/watch?v=Ki0nuOeUpT0) by [AI for Devs](https://www.youtube.com/@ai-for-devs)
--   ["Knight Dev Is Mindblowing. The Best Coding Assistant tool?"](https://www.youtube.com/watch?v=Vp1Z3VGZroA), ["Combining Knight Dev With Google Gemini To Build Fast With Low Effort"](https://www.youtube.com/watch?v=cAfunEHLees), ["Browser Automation Made Easy With Knight Dev"](https://www.youtube.com/watch?v=EQ4O8rUOqZs), ["CREATE THE PERFECT CODE FOR YOU"](https://www.youtube.com/watch?v=HA5e0YIBOjk), ["The Most Powerful AI Coding Assistant Is Now Available With Local Models"](https://www.youtube.com/watch?v=UpTGEsY1Bus) by [Yaron Been](https://www.youtube.com/@ecomxfactor-YaronBeen)
--   ["Meet Knight Dev — An Open-Source AI Programmer In VS Code"](https://generativeai.pub/meet-knight-dev-an-open-source-autonomous-ai-programmer-in-vs-code-f457f9821b7b) and ["Build games with zero code using Knight Dev in VS Code"](https://www.youtube.com/watch?v=VT-JYVi81ew) by [Jim Clyde Monge](https://jimclydemonge.medium.com/)
--   ["Knight Dev Builds NextJS App! Continue Dev & GitHub Copilot Open-Source Alternative"](https://www.youtube.com/watch?v=Rv0wJZRpnCQ) by [Josh Pocock](https://www.youtube.com/@joshfpocock)
--   ["KnightDev: The Ultimate Coding Agent for VS Code"](https://www.youtube.com/watch?v=aq0yw_DtphQ) by [Blas](https://www.youtube.com/@blascerecer)
--   ["I Built My First Web App in One Day Using Knight Dev Extension – Mind Blown!"](https://www.reddit.com/r/KnightAI/comments/1eqo3nk/i_built_my_first_web_app_in_one_day_using_knight/)
--   ["AI Development with Knight Dev"](https://www.linkedin.com/pulse/ai-development-knight-dev-shannon-lal-3ql3e/) by Shannon Lal
--   ["Code Smarter with Knight Dev: An AI Programmer for Your Projects"](https://www.linkedin.com/pulse/code-smarter-knight-dev-ai-programmer-your-projects-iana-detochka-jiqpe) by Iana D.
--   [Knight Dev also hit top 10 posts of all time on r/KnightAI](https://www.reddit.com/r/KnightAI/comments/1e3h0f1/my_submission_to_anthropics_build_with_knight/)
-
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
