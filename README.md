@@ -80,11 +80,3 @@ To build Knight Dev locally, follow these steps:
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
-
-## Questions?
-
-Contact me on X <a href="https://x.com/sdrzn" target="_blank">@sdrzn</a>. Please create an <a href="https://github.com/ttracx/knight-dev/issues">issue</a> if you come across a bug or would like a feature to be added.
-
-## Acknowledgments
-
-Special thanks to Anthropic for providing the model that powers this extension.
