@@ -97,7 +97,7 @@ class TerminalRegistry {
 	static createTerminal(cwd?: string | vscode.Uri | undefined): TerminalInfo {
 		const terminal = vscode.window.createTerminal({
 			cwd,
-			name: "Claude Dev",
+			name: "Knight Dev",
 			iconPath: new vscode.ThemeIcon("robot"),
 		})
 		const newInfo: TerminalInfo = {
@@ -221,7 +221,7 @@ export class TerminalManager {
 			if (t.busy) {
 				return false
 			}
-			const terminalCwd = t.terminal.shellIntegration?.cwd // one of claude's commands could have changed the cwd of the terminal
+			const terminalCwd = t.terminal.shellIntegration?.cwd // one of knight's commands could have changed the cwd of the terminal
 			if (!terminalCwd) {
 				return false
 			}
@@ -392,7 +392,7 @@ export class TerminalProcess extends EventEmitter<TerminalProcessEvents> {
 				if (this.hotTimer) {
 					clearTimeout(this.hotTimer)
 				}
-				// these markers indicate the command is some kind of local dev server recompiling the app, which we want to wait for output of before sending request to claude
+				// these markers indicate the command is some kind of local dev server recompiling the app, which we want to wait for output of before sending request to knight
 				const compilingMarkers = ["compiling", "building", "bundling", "transpiling", "generating", "starting"]
 				const markerNullifiers = [
 					"compiled",

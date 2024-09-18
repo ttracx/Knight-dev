@@ -22,8 +22,8 @@ export class OpenRouterHandler implements ApiHandler {
 			baseURL: "https://openrouter.ai/api/v1",
 			apiKey: this.options.openRouterApiKey,
 			defaultHeaders: {
-				"HTTP-Referer": "https://github.com/saoudrizwan/claude-dev", // Optional, for including your app on openrouter.ai rankings.
-				"X-Title": "claude-dev", // Optional. Shows in rankings on openrouter.ai.
+				"HTTP-Referer": "https://github.com/saoudrizwan/knight-dev", // Optional, for including your app on openrouter.ai rankings.
+				"X-Title": "knight-dev", // Optional. Shows in rankings on openrouter.ai.
 			},
 		})
 	}
@@ -41,9 +41,9 @@ export class OpenRouterHandler implements ApiHandler {
 
 		// prompt caching: https://openrouter.ai/docs/prompt-caching
 		switch (this.getModel().id) {
-			case "anthropic/claude-3.5-sonnet:beta":
-			case "anthropic/claude-3-haiku:beta":
-			case "anthropic/claude-3-opus:beta":
+			case "anthropic/knight-3.5-sonnet:beta":
+			case "anthropic/knight-3-haiku:beta":
+			case "anthropic/knight-3-opus:beta":
 				openAiMessages[0] = {
 					role: "system",
 					content: [

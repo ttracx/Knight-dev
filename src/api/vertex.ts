@@ -3,7 +3,7 @@ import { Anthropic } from "@anthropic-ai/sdk"
 import { ApiHandler, ApiHandlerMessageResponse } from "."
 import { ApiHandlerOptions, ModelInfo, vertexDefaultModelId, VertexModelId, vertexModels } from "../shared/api"
 
-// https://docs.anthropic.com/en/api/claude-on-vertex-ai
+// https://docs.anthropic.com/en/api/knight-on-vertex-ai
 export class VertexHandler implements ApiHandler {
 	private options: ApiHandlerOptions
 	private client: AnthropicVertex
@@ -12,7 +12,7 @@ export class VertexHandler implements ApiHandler {
 		this.options = options
 		this.client = new AnthropicVertex({
 			projectId: this.options.vertexProjectId,
-			// https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-claude#regions
+			// https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-knight#regions
 			region: this.options.vertexRegion,
 		})
 	}

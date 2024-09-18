@@ -1,6 +1,6 @@
-import { ClaudeMessage } from "../../../src/shared/ExtensionMessage"
+import { KnightMessage } from "../../../src/shared/ExtensionMessage"
 
-export const mockMessages: ClaudeMessage[] = [
+export const mockMessages: KnightMessage[] = [
 	{
 		ts: Date.now() - 3600000,
 		type: "say",

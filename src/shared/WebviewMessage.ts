@@ -20,10 +20,10 @@ export interface WebviewMessage {
 		| "openImage"
 		| "openFile"
 	text?: string
-	askResponse?: ClaudeAskResponse
+	askResponse?: KnightAskResponse
 	apiConfiguration?: ApiConfiguration
 	images?: string[]
 	bool?: boolean
 }
 
-export type ClaudeAskResponse = "yesButtonTapped" | "noButtonTapped" | "messageResponse"
+export type KnightAskResponse = "yesButtonTapped" | "noButtonTapped" | "messageResponse"

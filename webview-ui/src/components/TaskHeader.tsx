@@ -1,13 +1,13 @@
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import React, { memo, useEffect, useMemo, useRef, useState } from "react"
 import { useWindowSize } from "react-use"
-import { ClaudeMessage } from "../../../src/shared/ExtensionMessage"
+import { KnightMessage } from "../../../src/shared/ExtensionMessage"
 import { useExtensionState } from "../context/ExtensionStateContext"
 import { vscode } from "../utils/vscode"
 import Thumbnails from "./Thumbnails"
 
 interface TaskHeaderProps {
-	task: ClaudeMessage
+	task: KnightMessage
 	tokensIn: number
 	tokensOut: number
 	doesModelSupportPromptCache: boolean

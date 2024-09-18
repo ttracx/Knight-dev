@@ -12,23 +12,23 @@ import * as vscode from "vscode"
 import { ApiHandler, buildApiHandler } from "./api"
 import { TerminalManager } from "./integrations/TerminalManager"
 import { LIST_FILES_LIMIT, listFiles, parseSourceCodeForDefinitionsTopLevel } from "./parse-source-code"
-import { ClaudeDevProvider } from "./providers/ClaudeDevProvider"
+import { KnightDevProvider } from "./providers/KnightDevProvider"
 import { ApiConfiguration } from "./shared/api"
-import { ClaudeRequestResult } from "./shared/ClaudeRequestResult"
+import { KnightRequestResult } from "./shared/KnightRequestResult"
 import { combineApiRequests } from "./shared/combineApiRequests"
 import { combineCommandSequences } from "./shared/combineCommandSequences"
-import { ClaudeAsk, ClaudeMessage, ClaudeSay, ClaudeSayTool } from "./shared/ExtensionMessage"
+import { KnightAsk, KnightMessage, KnightSay, KnightSayTool } from "./shared/ExtensionMessage"
 import { getApiMetrics } from "./shared/getApiMetrics"
 import { HistoryItem } from "./shared/HistoryItem"
 import { Tool, ToolName } from "./shared/Tool"
-import { ClaudeAskResponse } from "./shared/WebviewMessage"
+import { KnightAskResponse } from "./shared/WebviewMessage"
 import { findLast, findLastIndex, formatContentBlockToMarkdown } from "./utils"
 import { truncateHalfConversation } from "./utils/context-management"
 import { extractTextFromFile } from "./utils/extract-text"
 import { regexSearchFiles } from "./utils/ripgrep"
 
 const SYSTEM_PROMPT =
-	async () => `You are Claude Dev, a highly skilled software developer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.
+	async () => `You are Knight Dev, a highly skilled software developer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.
 
 ====
  
@@ -245,7 +245,7 @@ type UserContent = Array<
 	Anthropic.TextBlockParam | Anthropic.ImageBlockParam | Anthropic.ToolUseBlockParam | Anthropic.ToolResultBlockParam
 >
 
-export class ClaudeDev {
+export class KnightDev {
 	readonly taskId: string
 	private api: ApiHandler
 	private terminalManager: TerminalManager
@@ -253,17 +253,17 @@ export class ClaudeDev {
 	private customInstructions?: string
 	private alwaysAllowReadOnly: boolean
 	apiConversationHistory: Anthropic.MessageParam[] = []
-	claudeMessages: ClaudeMessage[] = []
-	private askResponse?: ClaudeAskResponse
+	knightMessages: KnightMessage[] = []
+	private askResponse?: KnightAskResponse
 	private askResponseText?: string
 	private askResponseImages?: string[]
 	private lastMessageTs?: number
 	private consecutiveMistakeCount: number = 0
-	private providerRef: WeakRef<ClaudeDevProvider>
+	private providerRef: WeakRef<KnightDevProvider>
 	private abort: boolean = false
 
 	constructor(
-		provider: ClaudeDevProvider,
+		provider: KnightDevProvider,
 		apiConfiguration: ApiConfiguration,
 		customInstructions?: string,
 		alwaysAllowReadOnly?: boolean,
@@ -300,7 +300,7 @@ export class ClaudeDev {
 		this.alwaysAllowReadOnly = alwaysAllowReadOnly ?? false
 	}
 
-	async handleWebviewAskResponse(askResponse: ClaudeAskResponse, text?: string, images?: string[]) {
+	async handleWebviewAskResponse(askResponse: KnightAskResponse, text?: string, images?: string[]) {
 		this.askResponse = askResponse
 		this.askResponseText = text
 		this.askResponseImages = images
@@ -350,8 +350,8 @@ export class ClaudeDev {
 		}
 	}
 
-	private async getSavedClaudeMessages(): Promise<ClaudeMessage[]> {
-		const filePath = path.join(await this.ensureTaskDirectoryExists(), "claude_messages.json")
+	private async getSavedKnightMessages(): Promise<KnightMessage[]> {
+		const filePath = path.join(await this.ensureTaskDirectoryExists(), "knight_messages.json")
 		const fileExists = await fs
 			.access(filePath)
 			.then(() => true)
@@ -362,27 +362,27 @@ export class ClaudeDev {
 		return []
 	}
 
-	private async addToClaudeMessages(message: ClaudeMessage) {
-		this.claudeMessages.push(message)
-		await this.saveClaudeMessages()
+	private async addToKnightMessages(message: KnightMessage) {
+		this.knightMessages.push(message)
+		await this.saveKnightMessages()
 	}
 
-	private async overwriteClaudeMessages(newMessages: ClaudeMessage[]) {
-		this.claudeMessages = newMessages
-		await this.saveClaudeMessages()
+	private async overwriteKnightMessages(newMessages: KnightMessage[]) {
+		this.knightMessages = newMessages
+		await this.saveKnightMessages()
 	}
 
-	private async saveClaudeMessages() {
+	private async saveKnightMessages() {
 		try {
-			const filePath = path.join(await this.ensureTaskDirectoryExists(), "claude_messages.json")
-			await fs.writeFile(filePath, JSON.stringify(this.claudeMessages))
+			const filePath = path.join(await this.ensureTaskDirectoryExists(), "knight_messages.json")
+			await fs.writeFile(filePath, JSON.stringify(this.knightMessages))
 			// combined as they are in ChatView
-			const apiMetrics = getApiMetrics(combineApiRequests(combineCommandSequences(this.claudeMessages.slice(1))))
-			const taskMessage = this.claudeMessages[0] // first message is always the task say
+			const apiMetrics = getApiMetrics(combineApiRequests(combineCommandSequences(this.knightMessages.slice(1))))
+			const taskMessage = this.knightMessages[0] // first message is always the task say
 			const lastRelevantMessage =
-				this.claudeMessages[
+				this.knightMessages[
 					findLastIndex(
-						this.claudeMessages,
+						this.knightMessages,
 						(m) => !(m.ask === "resume_task" || m.ask === "resume_completed_task")
 					)
 				]
@@ -397,24 +397,24 @@ export class ClaudeDev {
 				totalCost: apiMetrics.totalCost,
 			})
 		} catch (error) {
-			console.error("Failed to save claude messages:", error)
+			console.error("Failed to save knight messages:", error)
 		}
 	}
 
 	async ask(
-		type: ClaudeAsk,
+		type: KnightAsk,
 		question?: string
-	): Promise<{ response: ClaudeAskResponse; text?: string; images?: string[] }> {
-		// If this ClaudeDev instance was aborted by the provider, then the only thing keeping us alive is a promise still running in the background, in which case we don't want to send its result to the webview as it is attached to a new instance of ClaudeDev now. So we can safely ignore the result of any active promises, and this class will be deallocated. (Although we set claudeDev = undefined in provider, that simply removes the reference to this instance, but the instance is still alive until this promise resolves or rejects.)
+	): Promise<{ response: KnightAskResponse; text?: string; images?: string[] }> {
+		// If this KnightDev instance was aborted by the provider, then the only thing keeping us alive is a promise still running in the background, in which case we don't want to send its result to the webview as it is attached to a new instance of KnightDev now. So we can safely ignore the result of any active promises, and this class will be deallocated. (Although we set knightDev = undefined in provider, that simply removes the reference to this instance, but the instance is still alive until this promise resolves or rejects.)
 		if (this.abort) {
-			throw new Error("ClaudeDev instance aborted")
+			throw new Error("KnightDev instance aborted")
 		}
 		this.askResponse = undefined
 		this.askResponseText = undefined
 		this.askResponseImages = undefined
 		const askTs = Date.now()
 		this.lastMessageTs = askTs
-		await this.addToClaudeMessages({ ts: askTs, type: "ask", ask: type, text: question })
+		await this.addToKnightMessages({ ts: askTs, type: "ask", ask: type, text: question })
 		await this.providerRef.deref()?.postStateToWebview()
 		await pWaitFor(() => this.askResponse !== undefined || this.lastMessageTs !== askTs, { interval: 100 })
 		if (this.lastMessageTs !== askTs) {
@@ -427,20 +427,20 @@ export class ClaudeDev {
 		return result
 	}
 
-	async say(type: ClaudeSay, text?: string, images?: string[]): Promise<undefined> {
+	async say(type: KnightSay, text?: string, images?: string[]): Promise<undefined> {
 		if (this.abort) {
-			throw new Error("ClaudeDev instance aborted")
+			throw new Error("KnightDev instance aborted")
 		}
 		const sayTs = Date.now()
 		this.lastMessageTs = sayTs
-		await this.addToClaudeMessages({ ts: sayTs, type: "say", say: type, text: text, images })
+		await this.addToKnightMessages({ ts: sayTs, type: "say", say: type, text: text, images })
 		await this.providerRef.deref()?.postStateToWebview()
 	}
 
 	private async startTask(task?: string, images?: string[]): Promise<void> {
-		// conversationHistory (for API) and claudeMessages (for webview) need to be in sync
-		// if the extension process were killed, then on restart the claudeMessages might not be empty, so we need to set it to [] when we create a new ClaudeDev client (otherwise webview would show stale messages from previous session)
-		this.claudeMessages = []
+		// conversationHistory (for API) and knightMessages (for webview) need to be in sync
+		// if the extension process were killed, then on restart the knightMessages might not be empty, so we need to set it to [] when we create a new KnightDev client (otherwise webview would show stale messages from previous session)
+		this.knightMessages = []
 		this.apiConversationHistory = []
 		await this.providerRef.deref()?.postStateToWebview()
 
@@ -457,52 +457,52 @@ export class ClaudeDev {
 	}
 
 	private async resumeTaskFromHistory() {
-		const modifiedClaudeMessages = await this.getSavedClaudeMessages()
+		const modifiedKnightMessages = await this.getSavedKnightMessages()
 
-		// Need to modify claude messages for good ux, i.e. if the last message is an api_request_started, then remove it otherwise the user will think the request is still loading
-		const lastApiReqStartedIndex = modifiedClaudeMessages.reduce(
+		// Need to modify knight messages for good ux, i.e. if the last message is an api_request_started, then remove it otherwise the user will think the request is still loading
+		const lastApiReqStartedIndex = modifiedKnightMessages.reduce(
 			(lastIndex, m, index) => (m.type === "say" && m.say === "api_req_started" ? index : lastIndex),
 			-1
 		)
-		const lastApiReqFinishedIndex = modifiedClaudeMessages.reduce(
+		const lastApiReqFinishedIndex = modifiedKnightMessages.reduce(
 			(lastIndex, m, index) => (m.type === "say" && m.say === "api_req_finished" ? index : lastIndex),
 			-1
 		)
 		if (lastApiReqStartedIndex > lastApiReqFinishedIndex && lastApiReqStartedIndex !== -1) {
-			modifiedClaudeMessages.splice(lastApiReqStartedIndex, 1)
+			modifiedKnightMessages.splice(lastApiReqStartedIndex, 1)
 		}
 
 		// Remove any resume messages that may have been added before
 		const lastRelevantMessageIndex = findLastIndex(
-			modifiedClaudeMessages,
+			modifiedKnightMessages,
 			(m) => !(m.ask === "resume_task" || m.ask === "resume_completed_task")
 		)
 		if (lastRelevantMessageIndex !== -1) {
-			modifiedClaudeMessages.splice(lastRelevantMessageIndex + 1)
+			modifiedKnightMessages.splice(lastRelevantMessageIndex + 1)
 		}
 
-		await this.overwriteClaudeMessages(modifiedClaudeMessages)
-		this.claudeMessages = await this.getSavedClaudeMessages()
+		await this.overwriteKnightMessages(modifiedKnightMessages)
+		this.knightMessages = await this.getSavedKnightMessages()
 
-		// Now present the claude messages to the user and ask if they want to resume
+		// Now present the knight messages to the user and ask if they want to resume
 
-		const lastClaudeMessage = this.claudeMessages
+		const lastKnightMessage = this.knightMessages
 			.slice()
 			.reverse()
 			.find((m) => !(m.ask === "resume_task" || m.ask === "resume_completed_task")) // could be multiple resume tasks
-		// const lastClaudeMessage = this.claudeMessages[lastClaudeMessageIndex]
+		// const lastKnightMessage = this.knightMessages[lastKnightMessageIndex]
 		// could be a completion result with a command
-		// const secondLastClaudeMessage = this.claudeMessages
+		// const secondLastKnightMessage = this.knightMessages
 		// 	.slice()
 		// 	.reverse()
 		// 	.find(
 		// 		(m, index) =>
-		// 			index !== lastClaudeMessageIndex && !(m.ask === "resume_task" || m.ask === "resume_completed_task")
+		// 			index !== lastKnightMessageIndex && !(m.ask === "resume_task" || m.ask === "resume_completed_task")
 		// 	)
-		// (lastClaudeMessage?.ask === "command" && secondLastClaudeMessage?.ask === "completion_result")
+		// (lastKnightMessage?.ask === "command" && secondLastKnightMessage?.ask === "completion_result")
 
-		let askType: ClaudeAsk
-		if (lastClaudeMessage?.ask === "completion_result") {
+		let askType: KnightAsk
+		if (lastKnightMessage?.ask === "completion_result") {
 			askType = "resume_completed_task"
 		} else {
 			askType = "resume_task"
@@ -517,7 +517,7 @@ export class ClaudeDev {
 			responseImages = images
 		}
 
-		// need to make sure that the api conversation history can be resumed by the api, even if it goes out of sync with claude messages
+		// need to make sure that the api conversation history can be resumed by the api, even if it goes out of sync with knight messages
 
 		// if the last message is an assistant message, we need to check if there's tool use since every tool use has to have a tool response
 		// if there's no tool use and only a text block, then we can just add a user message
@@ -604,7 +604,7 @@ export class ClaudeDev {
 		let newUserContent: UserContent = [...modifiedOldUserContent]
 
 		const agoText = (() => {
-			const timestamp = lastClaudeMessage?.ts ?? Date.now()
+			const timestamp = lastKnightMessage?.ts ?? Date.now()
 			const now = Date.now()
 			const diff = now - timestamp
 			const minutes = Math.floor(diff / 60000)
@@ -644,11 +644,11 @@ export class ClaudeDev {
 		let nextUserContent = userContent
 		let includeFileDetails = true
 		while (!this.abort) {
-			const { didEndLoop } = await this.recursivelyMakeClaudeRequests(nextUserContent, includeFileDetails)
+			const { didEndLoop } = await this.recursivelyMakeKnightRequests(nextUserContent, includeFileDetails)
 			includeFileDetails = false // we only need file details the first time
 
-			//  The way this agentic loop works is that claude will be given a task that he then calls tools to complete. unless there's an attempt_completion call, we keep responding back to him with his tool's responses until he either attempt_completion or does not use anymore tools. If he does not use anymore tools, we ask him to consider if he's completed the task and then call attempt_completion, otherwise proceed with completing the task.
-			// There is a MAX_REQUESTS_PER_TASK limit to prevent infinite requests, but Claude is prompted to finish the task as efficiently as he can.
+			//  The way this agentic loop works is that knight will be given a task that he then calls tools to complete. unless there's an attempt_completion call, we keep responding back to him with his tool's responses until he either attempt_completion or does not use anymore tools. If he does not use anymore tools, we ask him to consider if he's completed the task and then call attempt_completion, otherwise proceed with completing the task.
+			// There is a MAX_REQUESTS_PER_TASK limit to prevent infinite requests, but Knight is prompted to finish the task as efficiently as he can.
 
 			//const totalCost = this.calculateApiCost(totalInputTokens, totalOutputTokens)
 			if (didEndLoop) {
@@ -658,7 +658,7 @@ export class ClaudeDev {
 			} else {
 				// this.say(
 				// 	"tool",
-				// 	"Claude responded with only text blocks but has not called attempt_completion yet. Forcing him to continue with task..."
+				// 	"Knight responded with only text blocks but has not called attempt_completion yet. Forcing him to continue with task..."
 				// )
 				nextUserContent = [
 					{
@@ -732,7 +732,7 @@ export class ClaudeDev {
 			// Custom error message for this particular case
 			await this.say(
 				"error",
-				`Claude tried to use write_to_file for '${relPath}' without value for required parameter 'content'. This is likely due to reaching the maximum output token limit. Retrying with suggestion to change response size...`
+				`Knight tried to use write_to_file for '${relPath}' without value for required parameter 'content'. This is likely due to reaching the maximum output token limit. Retrying with suggestion to change response size...`
 			)
 			return [
 				false,
@@ -760,7 +760,7 @@ export class ClaudeDev {
 			let originalContent: string
 			if (fileExists) {
 				originalContent = await fs.readFile(absolutePath, "utf-8")
-				// fix issue where claude always removes newline from the file
+				// fix issue where knight always removes newline from the file
 				const eol = originalContent.includes("\r\n") ? "\r\n" : "\n"
 				if (originalContent.endsWith(eol) && !newContent.endsWith(eol)) {
 					newContent += eol
@@ -809,11 +809,11 @@ export class ClaudeDev {
 			// Show diff
 			await vscode.commands.executeCommand(
 				"vscode.diff",
-				vscode.Uri.parse(`claude-dev-diff:${fileName}`).with({
+				vscode.Uri.parse(`knight-dev-diff:${fileName}`).with({
 					query: Buffer.from(originalContent).toString("base64"),
 				}),
 				updatedDocument.uri,
-				`${fileName}: ${fileExists ? "Original ↔ Claude's Changes" : "New File"} (Editable)`
+				`${fileName}: ${fileExists ? "Original ↔ Knight's Changes" : "New File"} (Editable)`
 			)
 
 			// if the file was already open, close it (must happen after showing the diff view since if it's the only tab the column will close)
@@ -882,7 +882,7 @@ export class ClaudeDev {
 			await vscode.commands.executeCommand("workbench.action.focusSideBar")
 
 			let userResponse: {
-				response: ClaudeAskResponse
+				response: KnightAskResponse
 				text?: string
 				images?: string[]
 			}
@@ -893,7 +893,7 @@ export class ClaudeDev {
 						tool: "editedExistingFile",
 						path: this.getReadablePath(relPath),
 						diff: this.createPrettyPatch(relPath, originalContent, newContent),
-					} as ClaudeSayTool)
+					} as KnightSayTool)
 				)
 			} else {
 				userResponse = await this.ask(
@@ -902,7 +902,7 @@ export class ClaudeDev {
 						tool: "newFileCreated",
 						path: this.getReadablePath(relPath),
 						content: newContent,
-					} as ClaudeSayTool)
+					} as KnightSayTool)
 				)
 			}
 			const { response, text, images } = userResponse
@@ -919,7 +919,7 @@ export class ClaudeDev {
 			// 	// 	console.log(`Could not open editor for ${absolutePath}: ${error}`)
 			// 	// }
 			// 	// await delay(50)
-			// 	// // Wait for the in-memory document to become the active editor (sometimes vscode timing issues happen and this would accidentally close claude dev!)
+			// 	// // Wait for the in-memory document to become the active editor (sometimes vscode timing issues happen and this would accidentally close knight dev!)
 			// 	// await pWaitFor(
 			// 	// 	() => {
 			// 	// 		return vscode.window.activeTextEditor?.document === inMemoryDocument
@@ -1046,7 +1046,7 @@ export class ClaudeDev {
 						tool: fileExists ? "editedExistingFile" : "newFileCreated",
 						path: this.getReadablePath(relPath),
 						diff: this.createPrettyPatch(relPath, normalizedNewContent, normalizedEditedContent),
-					} as ClaudeSayTool)
+					} as KnightSayTool)
 				)
 				return [
 					false,
@@ -1125,7 +1125,7 @@ export class ClaudeDev {
 			.flat()
 			.filter(
 				(tab) =>
-					tab.input instanceof vscode.TabInputTextDiff && tab.input?.original?.scheme === "claude-dev-diff"
+					tab.input instanceof vscode.TabInputTextDiff && tab.input?.original?.scheme === "knight-dev-diff"
 			)
 
 		for (const tab of tabs) {
@@ -1150,7 +1150,7 @@ export class ClaudeDev {
 				tool: "readFile",
 				path: this.getReadablePath(relPath),
 				content: absolutePath,
-			} as ClaudeSayTool)
+			} as KnightSayTool)
 			if (this.alwaysAllowReadOnly) {
 				await this.say("tool", message)
 			} else {
@@ -1194,7 +1194,7 @@ export class ClaudeDev {
 				tool: recursive ? "listFilesRecursive" : "listFilesTopLevel",
 				path: this.getReadablePath(relDirPath),
 				content: result,
-			} as ClaudeSayTool)
+			} as KnightSayTool)
 			if (this.alwaysAllowReadOnly) {
 				await this.say("tool", message)
 			} else {
@@ -1239,7 +1239,7 @@ export class ClaudeDev {
 			if (absolutePath.includes(cwd)) {
 				return normalizedRelPath
 			} else {
-				// we are outside the cwd, so show the absolute path (useful for when claude passes in '../../' for example)
+				// we are outside the cwd, so show the absolute path (useful for when knight passes in '../../' for example)
 				return absolutePath
 			}
 		}
@@ -1252,7 +1252,7 @@ export class ClaudeDev {
 				const relativePath = path.relative(absolutePath, file)
 				return file.endsWith("/") ? relativePath + "/" : relativePath
 			})
-			// Sort so files are listed under their respective directories to make it clear what files are children of what directories. Since we build file list top down, even if file list is truncated it will show directories that claude can then explore further.
+			// Sort so files are listed under their respective directories to make it clear what files are children of what directories. Since we build file list top down, even if file list is truncated it will show directories that knight can then explore further.
 			.sort((a, b) => {
 				const aParts = a.split("/")
 				const bParts = b.split("/")
@@ -1297,7 +1297,7 @@ export class ClaudeDev {
 				tool: "listCodeDefinitionNames",
 				path: this.getReadablePath(relDirPath),
 				content: result,
-			} as ClaudeSayTool)
+			} as KnightSayTool)
 			if (this.alwaysAllowReadOnly) {
 				await this.say("tool", message)
 			} else {
@@ -1347,7 +1347,7 @@ export class ClaudeDev {
 				regex: regex,
 				filePattern: filePattern,
 				content: results,
-			} as ClaudeSayTool)
+			} as KnightSayTool)
 
 			if (this.alwaysAllowReadOnly) {
 				await this.say("tool", message)
@@ -1507,7 +1507,7 @@ export class ClaudeDev {
 		let resultToSend = result
 		if (command) {
 			await this.say("completion_result", resultToSend)
-			// TODO: currently we don't handle if this command fails, it could be useful to let claude know and retry
+			// TODO: currently we don't handle if this command fails, it could be useful to let knight know and retry
 			const [didUserReject, commandResult] = await this.executeCommand(command, true)
 			// if we received non-empty string, the command was rejected or failed
 			if (commandResult) {
@@ -1546,7 +1546,7 @@ ${this.customInstructions.trim()}
 			}
 
 			// If the last API request's total token usage is close to the context window, truncate the conversation history to free up space for the new request
-			const lastApiReqFinished = findLast(this.claudeMessages, (m) => m.say === "api_req_finished")
+			const lastApiReqFinished = findLast(this.knightMessages, (m) => m.say === "api_req_finished")
 			if (lastApiReqFinished && lastApiReqFinished.text) {
 				const {
 					tokensIn,
@@ -1588,20 +1588,20 @@ ${this.customInstructions.trim()}
 		}
 	}
 
-	async recursivelyMakeClaudeRequests(
+	async recursivelyMakeKnightRequests(
 		userContent: UserContent,
 		includeFileDetails: boolean = false
-	): Promise<ClaudeRequestResult> {
+	): Promise<KnightRequestResult> {
 		if (this.abort) {
-			throw new Error("ClaudeDev instance aborted")
+			throw new Error("KnightDev instance aborted")
 		}
 
 		if (this.consecutiveMistakeCount >= 3) {
 			const { response, text, images } = await this.ask(
 				"mistake_limit_reached",
-				this.api.getModel().id.includes("claude")
+				this.api.getModel().id.includes("knight")
 					? `This may indicate a failure in his thought process or inability to use a tool properly, which can be mitigated with some user guidance (e.g. "Try breaking down the task into smaller steps").`
-					: "Claude Dev uses complex prompts and iterative task execution that may be challenging for less capable models. For best results, it's recommended to use Claude 3.5 Sonnet for its advanced agentic coding capabilities."
+					: "Knight Dev uses complex prompts and iterative task execution that may be challenging for less capable models. For best results, it's recommended to use Knight 3.5 Sonnet for its advanced agentic coding capabilities."
 			)
 			if (response === "messageResponse") {
 				userContent.push(
@@ -1638,20 +1638,20 @@ ${this.customInstructions.trim()}
 		await this.addToApiConversationHistory({ role: "user", content: userContent })
 
 		// since we sent off a placeholder api_req_started message to update the webview while waiting to actually start the API request (to load potential details for example), we need to update the text of that message
-		const lastApiReqIndex = findLastIndex(this.claudeMessages, (m) => m.say === "api_req_started")
-		this.claudeMessages[lastApiReqIndex].text = JSON.stringify({
+		const lastApiReqIndex = findLastIndex(this.knightMessages, (m) => m.say === "api_req_started")
+		this.knightMessages[lastApiReqIndex].text = JSON.stringify({
 			request: userContent
 				.map((block) => formatContentBlockToMarkdown(block, this.apiConversationHistory))
 				.join("\n\n"),
 		})
-		await this.saveClaudeMessages()
+		await this.saveKnightMessages()
 		await this.providerRef.deref()?.postStateToWebview()
 
 		try {
 			const response = await this.attemptApiRequest()
 
 			if (this.abort) {
-				throw new Error("ClaudeDev instance aborted")
+				throw new Error("KnightDev instance aborted")
 			}
 
 			let assistantResponses: Anthropic.Messages.ContentBlock[] = []
@@ -1744,7 +1744,7 @@ ${this.customInstructions.trim()}
 			let didEndLoop = false
 
 			// attempt_completion is always done last, since there might have been other tools that needed to be called first before the job is finished
-			// it's important to note that claude will order the tools logically in most cases, so we don't have to think about which tools make sense calling before others
+			// it's important to note that knight will order the tools logically in most cases, so we don't have to think about which tools make sense calling before others
 			if (attemptCompletionBlock) {
 				let [_, result] = await this.executeTool(
 					attemptCompletionBlock.name as ToolName,
@@ -1780,7 +1780,7 @@ ${this.customInstructions.trim()}
 						didEndLoop: recDidEndLoop,
 						inputTokens: recInputTokens,
 						outputTokens: recOutputTokens,
-					} = await this.recursivelyMakeClaudeRequests(toolResults)
+					} = await this.recursivelyMakeKnightRequests(toolResults)
 					didEndLoop = recDidEndLoop
 					inputTokens += recInputTokens
 					outputTokens += recOutputTokens
@@ -1794,7 +1794,7 @@ ${this.customInstructions.trim()}
 		}
 	}
 
-	// Formatting responses to Claude
+	// Formatting responses to Knight
 
 	private formatImagesIntoBlocks(images?: string[]): Anthropic.ImageBlockParam[] {
 		return images
@@ -1824,7 +1824,7 @@ ${this.customInstructions.trim()}
 	async getEnvironmentDetails(includeFileDetails: boolean = false) {
 		let details = ""
 
-		// It could be useful for claude to know if the user went from one or no file to another between messages, so we always include this context
+		// It could be useful for knight to know if the user went from one or no file to another between messages, so we always include this context
 		details += "\n\n# VSCode Visible Files"
 		const visibleFiles = vscode.window.visibleTextEditors
 			?.map((editor) => editor.document?.uri?.fsPath)
@@ -1872,7 +1872,7 @@ ${this.customInstructions.trim()}
 		// we want to get diagnostics AFTER terminal cools down for a few reasons: terminal could be scaffolding a project, dev servers (compilers like webpack) will first re-compile and then send diagnostics, etc
 		/*
 		let diagnosticsDetails = ""
-		const diagnostics = await this.diagnosticsMonitor.getCurrentDiagnostics(this.didEditFile || terminalWasBusy) // if claude ran a command (ie npm install) or edited the workspace then wait a bit for updated diagnostics
+		const diagnostics = await this.diagnosticsMonitor.getCurrentDiagnostics(this.didEditFile || terminalWasBusy) // if knight ran a command (ie npm install) or edited the workspace then wait a bit for updated diagnostics
 		for (const [uri, fileDiagnostics] of diagnostics) {
 			const problems = fileDiagnostics.filter((d) => d.severity === vscode.DiagnosticSeverity.Error)
 			if (problems.length > 0) {
@@ -1968,7 +1968,7 @@ ${this.customInstructions.trim()}
 	async sayAndCreateMissingParamError(toolName: ToolName, paramName: string, relPath?: string) {
 		await this.say(
 			"error",
-			`Claude tried to use ${toolName}${
+			`Knight tried to use ${toolName}${
 				relPath ? ` for '${relPath}'` : ""
 			} without value for required parameter '${paramName}'. Retrying...`
 		)

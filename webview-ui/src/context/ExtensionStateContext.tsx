@@ -20,7 +20,7 @@ const ExtensionStateContext = createContext<ExtensionStateContextType | undefine
 export const ExtensionStateContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const [state, setState] = useState<ExtensionState>({
 		version: "",
-		claudeMessages: [],
+		knightMessages: [],
 		taskHistory: [],
 		shouldShowAnnouncement: false,
 	})

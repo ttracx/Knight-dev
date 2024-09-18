@@ -1,18 +1,18 @@
-import { ClaudeMessage } from "./ExtensionMessage"
+import { KnightMessage } from "./ExtensionMessage"
 
 /**
- * Combines sequences of command and command_output messages in an array of ClaudeMessages.
+ * Combines sequences of command and command_output messages in an array of KnightMessages.
  *
- * This function processes an array of ClaudeMessage objects, looking for sequences
+ * This function processes an array of KnightMessage objects, looking for sequences
  * where a 'command' message is followed by one or more 'command_output' messages.
  * When such a sequence is found, it combines them into a single message, merging
  * their text contents.
  *
- * @param messages - An array of ClaudeMessage objects to process.
- * @returns A new array of ClaudeMessage objects with command sequences combined.
+ * @param messages - An array of KnightMessage objects to process.
+ * @returns A new array of KnightMessage objects with command sequences combined.
  *
  * @example
- * const messages: ClaudeMessage[] = [
+ * const messages: KnightMessage[] = [
  *   { type: 'ask', ask: 'command', text: 'ls', ts: 1625097600000 },
  *   { type: 'ask', ask: 'command_output', text: 'file1.txt', ts: 1625097601000 },
  *   { type: 'ask', ask: 'command_output', text: 'file2.txt', ts: 1625097602000 }
@@ -20,8 +20,8 @@ import { ClaudeMessage } from "./ExtensionMessage"
  * const result = simpleCombineCommandSequences(messages);
  * // Result: [{ type: 'ask', ask: 'command', text: 'ls\nfile1.txt\nfile2.txt', ts: 1625097600000 }]
  */
-export function combineCommandSequences(messages: ClaudeMessage[]): ClaudeMessage[] {
-	const combinedCommands: ClaudeMessage[] = []
+export function combineCommandSequences(messages: KnightMessage[]): KnightMessage[] {
+	const combinedCommands: KnightMessage[] = []
 
 	// First pass: combine commands with their outputs
 	for (let i = 0; i < messages.length; i++) {

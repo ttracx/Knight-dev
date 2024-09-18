@@ -1,7 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode"
-import { ClaudeDevProvider } from "./providers/ClaudeDevProvider"
+import { KnightDevProvider } from "./providers/KnightDevProvider"
 import delay from "delay"
 
 /*
@@ -20,33 +20,33 @@ let outputChannel: vscode.OutputChannel
 export function activate(context: vscode.ExtensionContext) {
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
-	//console.log('Congratulations, your extension "claude-dev" is now active!')
+	//console.log('Congratulations, your extension "knight-dev" is now active!')
 
-	outputChannel = vscode.window.createOutputChannel("Claude Dev")
+	outputChannel = vscode.window.createOutputChannel("Knight Dev")
 	context.subscriptions.push(outputChannel)
 
-	outputChannel.appendLine("Claude Dev extension activated")
+	outputChannel.appendLine("Knight Dev extension activated")
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
-	// const disposable = vscode.commands.registerCommand("claude-dev.helloWorld", () => {
+	// const disposable = vscode.commands.registerCommand("knight-dev.helloWorld", () => {
 	// 	// The code you place here will be executed every time your command is executed
 	// 	// Display a message box to the user
-	// 	vscode.window.showInformationMessage("Hello World from claude-dev!")
+	// 	vscode.window.showInformationMessage("Hello World from knight-dev!")
 	// })
 	// context.subscriptions.push(disposable)
 
-	const sidebarProvider = new ClaudeDevProvider(context, outputChannel)
+	const sidebarProvider = new KnightDevProvider(context, outputChannel)
 
 	context.subscriptions.push(
-		vscode.window.registerWebviewViewProvider(ClaudeDevProvider.sideBarId, sidebarProvider, {
+		vscode.window.registerWebviewViewProvider(KnightDevProvider.sideBarId, sidebarProvider, {
 			webviewOptions: { retainContextWhenHidden: true },
 		})
 	)
 
 	context.subscriptions.push(
-		vscode.commands.registerCommand("claude-dev.plusButtonTapped", async () => {
+		vscode.commands.registerCommand("knight-dev.plusButtonTapped", async () => {
 			outputChannel.appendLine("Plus button tapped")
 			await sidebarProvider.clearTask()
 			await sidebarProvider.postStateToWebview()
@@ -54,11 +54,11 @@ export function activate(context: vscode.ExtensionContext) {
 		})
 	)
 
-	const openClaudeDevInNewTab = async () => {
-		outputChannel.appendLine("Opening Claude Dev in new tab")
+	const openKnightDevInNewTab = async () => {
+		outputChannel.appendLine("Opening Knight Dev in new tab")
 		// (this example uses webviewProvider activation event which is necessary to deserialize cached webview, but since we use retainContextWhenHidden, we don't need to use that event)
 		// https://github.com/microsoft/vscode-extension-samples/blob/main/webview-sample/src/extension.ts
-		const tabProvider = new ClaudeDevProvider(context, outputChannel)
+		const tabProvider = new KnightDevProvider(context, outputChannel)
 		//const column = vscode.window.activeTextEditor ? vscode.window.activeTextEditor.viewColumn : undefined
 		const lastCol = Math.max(...vscode.window.visibleTextEditors.map((editor) => editor.viewColumn || 0))
 
@@ -69,7 +69,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 		const targetCol = hasVisibleEditors ? Math.max(lastCol + 1, 1) : vscode.ViewColumn.Two
 
-		const panel = vscode.window.createWebviewPanel(ClaudeDevProvider.tabPanelId, "Claude Dev", targetCol, {
+		const panel = vscode.window.createWebviewPanel(KnightDevProvider.tabPanelId, "Knight Dev", targetCol, {
 			enableScripts: true,
 			retainContextWhenHidden: true,
 			localResourceRoots: [context.extensionUri],
@@ -87,19 +87,19 @@ export function activate(context: vscode.ExtensionContext) {
 		await vscode.commands.executeCommand("workbench.action.lockEditorGroup")
 	}
 
-	context.subscriptions.push(vscode.commands.registerCommand("claude-dev.popoutButtonTapped", openClaudeDevInNewTab))
-	context.subscriptions.push(vscode.commands.registerCommand("claude-dev.openInNewTab", openClaudeDevInNewTab))
+	context.subscriptions.push(vscode.commands.registerCommand("knight-dev.popoutButtonTapped", openKnightDevInNewTab))
+	context.subscriptions.push(vscode.commands.registerCommand("knight-dev.openInNewTab", openKnightDevInNewTab))
 
 	context.subscriptions.push(
-		vscode.commands.registerCommand("claude-dev.settingsButtonTapped", () => {
-			//const message = "claude-dev.settingsButtonTapped!"
+		vscode.commands.registerCommand("knight-dev.settingsButtonTapped", () => {
+			//const message = "knight-dev.settingsButtonTapped!"
 			//vscode.window.showInformationMessage(message)
 			sidebarProvider.postMessageToWebview({ type: "action", action: "settingsButtonTapped" })
 		})
 	)
 
 	context.subscriptions.push(
-		vscode.commands.registerCommand("claude-dev.historyButtonTapped", () => {
+		vscode.commands.registerCommand("knight-dev.historyButtonTapped", () => {
 			sidebarProvider.postMessageToWebview({ type: "action", action: "historyButtonTapped" })
 		})
 	)
@@ -117,14 +117,14 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	})()
 	context.subscriptions.push(
-		vscode.workspace.registerTextDocumentContentProvider("claude-dev-diff", diffContentProvider)
+		vscode.workspace.registerTextDocumentContentProvider("knight-dev-diff", diffContentProvider)
 	)
 
 	// URI Handler
 	const handleUri = async (uri: vscode.Uri) => {
 		const path = uri.path
 		const query = new URLSearchParams(uri.query.replace(/\+/g, "%2B"))
-		const visibleProvider = ClaudeDevProvider.getVisibleInstance()
+		const visibleProvider = KnightDevProvider.getVisibleInstance()
 		if (!visibleProvider) {
 			return
 		}
@@ -145,5 +145,5 @@ export function activate(context: vscode.ExtensionContext) {
 
 // This method is called when your extension is deactivated
 export function deactivate() {
-	outputChannel.appendLine("Claude Dev extension deactivated")
+	outputChannel.appendLine("Knight Dev extension deactivated")
 }

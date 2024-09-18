@@ -9,7 +9,7 @@ interface AnnouncementProps {
 	hideAnnouncement: () => void
 }
 /*
-You must update the latestAnnouncementId in ClaudeDevProvider for new announcements to show to users. This new id will be compared with whats in state for the 'last announcement shown', and if it's different then the announcement will render. As soon as an announcement is shown, the id will be updated in state. This ensures that announcements are not shown more than once, even if the user doesn't close it themselves.
+You must update the latestAnnouncementId in KnightDevProvider for new announcements to show to users. This new id will be compared with whats in state for the 'last announcement shown', and if it's different then the announcement will render. As soon as an announcement is shown, the id will be updated in state. This ensures that announcements are not shown more than once, even if the user doesn't close it themselves.
 */
 const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 	return (
@@ -33,14 +33,14 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 			</h3>
 			<p style={{ margin: "5px 0px" }}>
 				Commands now run directly in your terminal thanks to VSCode 1.93's new shell integration updates! Plus a
-				new 'Proceed While Running' button to let Claude continue working while commands run, sending him new
+				new 'Proceed While Running' button to let Knight continue working while commands run, sending him new
 				output along the way (i.e. letting him react to server errors as he edits files).{" "}
 				<VSCodeLink style={{ display: "inline" }} href="https://x.com/sdrzn/status/1833316974518014072">
 					See a demo here.
 				</VSCodeLink>
 			</p>
 			{/* <p style={{ margin: "5px 0px" }}>
-				Claude can now monitor workspace problems to keep updated on linter/compiler/build issues, letting him
+				Knight can now monitor workspace problems to keep updated on linter/compiler/build issues, letting him
 				proactively fix errors on his own! (adding missing imports, fixing type errors, etc.)
 				<VSCodeLink style={{ display: "inline" }} href="https://x.com/sdrzn/status/1835100787275419829">
 					See a demo here.
@@ -80,16 +80,16 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 					)}
 				</li> 
 				<li>
-					<b>Edit Claude's changes before accepting!</b> When he creates or edits a file, you can modify his
+					<b>Edit Knight's changes before accepting!</b> When he creates or edits a file, you can modify his
 					changes directly in the right side of the diff view (+ hover over the 'Revert Block' arrow button in
 					the center to undo "<code>{"// rest of code here"}</code>" shenanigans)
 				</li>
 				<li>
-					New <code>search_files</code> tool that lets Claude perform regex searches in your project, letting
+					New <code>search_files</code> tool that lets Knight perform regex searches in your project, letting
 					him refactor code, address TODOs and FIXMEs, remove dead code, and more!
 				</li>
 				<li>
-					When Claude runs commands, you can now type directly in the terminal (+ support for Python
+					When Knight runs commands, you can now type directly in the terminal (+ support for Python
 					environments)
 				</li>
 			</ul>*/}

@@ -2,7 +2,7 @@ import { VSCodeBadge, VSCodeProgressRing } from "@vscode/webview-ui-toolkit/reac
 import deepEqual from "fast-deep-equal"
 import React, { memo, useMemo } from "react"
 import ReactMarkdown from "react-markdown"
-import { ClaudeMessage, ClaudeSayTool } from "../../../src/shared/ExtensionMessage"
+import { KnightMessage, KnightSayTool } from "../../../src/shared/ExtensionMessage"
 import { COMMAND_OUTPUT_STRING } from "../../../src/shared/combineCommandSequences"
 import CodeAccordian, { removeLeadingNonAlphanumeric } from "./CodeAccordian"
 import CodeBlock, { CODE_BLOCK_BG_COLOR } from "./CodeBlock"
@@ -10,10 +10,10 @@ import Thumbnails from "./Thumbnails"
 import { vscode } from "../utils/vscode"
 
 interface ChatRowProps {
-	message: ClaudeMessage
+	message: KnightMessage
 	isExpanded: boolean
 	onToggleExpand: () => void
-	lastModifiedMessage?: ClaudeMessage
+	lastModifiedMessage?: KnightMessage
 	isLast: boolean
 }
 
@@ -68,7 +68,7 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 					<span
 						className="codicon codicon-error"
 						style={{ color: errorColor, marginBottom: "-1.5px" }}></span>,
-					<span style={{ color: errorColor, fontWeight: "bold" }}>Claude is having trouble...</span>,
+					<span style={{ color: errorColor, fontWeight: "bold" }}>Knight is having trouble...</span>,
 				]
 			case "command":
 				return [
@@ -80,7 +80,7 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 							style={{ color: normalColor, marginBottom: "-1.5px" }}></span>
 					),
 					<span style={{ color: normalColor, fontWeight: "bold" }}>
-						Claude wants to execute this command:
+						Knight wants to execute this command:
 					</span>,
 				]
 			case "completion_result":
@@ -116,7 +116,7 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 					<span
 						className="codicon codicon-question"
 						style={{ color: normalColor, marginBottom: "-1.5px" }}></span>,
-					<span style={{ color: normalColor, fontWeight: "bold" }}>Claude has a question:</span>,
+					<span style={{ color: normalColor, fontWeight: "bold" }}>Knight has a question:</span>,
 				]
 			default:
 				return [null, null]
@@ -139,7 +139,7 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 
 	const tool = useMemo(() => {
 		if (message.ask === "tool" || message.say === "tool") {
-			return JSON.parse(message.text || "{}") as ClaudeSayTool
+			return JSON.parse(message.text || "{}") as KnightSayTool
 		}
 		return null
 	}, [message.ask, message.say, message.text])
@@ -157,7 +157,7 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 					<>
 						<div style={headerStyle}>
 							{toolIcon("edit")}
-							<span style={{ fontWeight: "bold" }}>Claude wants to edit this file:</span>
+							<span style={{ fontWeight: "bold" }}>Knight wants to edit this file:</span>
 						</div>
 						<CodeAccordian
 							diff={tool.diff!}
@@ -172,7 +172,7 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 					<>
 						<div style={headerStyle}>
 							{toolIcon("new-file")}
-							<span style={{ fontWeight: "bold" }}>Claude wants to create a new file:</span>
+							<span style={{ fontWeight: "bold" }}>Knight wants to create a new file:</span>
 						</div>
 						<CodeAccordian
 							code={tool.content!}
@@ -188,7 +188,7 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 						<div style={headerStyle}>
 							{toolIcon("file-code")}
 							<span style={{ fontWeight: "bold" }}>
-								{message.type === "ask" ? "Claude wants to read this file:" : "Claude read this file:"}
+								{message.type === "ask" ? "Knight wants to read this file:" : "Knight read this file:"}
 							</span>
 						</div>
 						{/* <CodeAccordian
@@ -245,8 +245,8 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 							{toolIcon("folder-opened")}
 							<span style={{ fontWeight: "bold" }}>
 								{message.type === "ask"
-									? "Claude wants to view the top level files in this directory:"
-									: "Claude viewed the top level files in this directory:"}
+									? "Knight wants to view the top level files in this directory:"
+									: "Knight viewed the top level files in this directory:"}
 							</span>
 						</div>
 						<CodeAccordian
@@ -265,8 +265,8 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 							{toolIcon("folder-opened")}
 							<span style={{ fontWeight: "bold" }}>
 								{message.type === "ask"
-									? "Claude wants to recursively view all files in this directory:"
-									: "Claude recursively viewed all files in this directory:"}
+									? "Knight wants to recursively view all files in this directory:"
+									: "Knight recursively viewed all files in this directory:"}
 							</span>
 						</div>
 						<CodeAccordian
@@ -285,8 +285,8 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 							{toolIcon("file-code")}
 							<span style={{ fontWeight: "bold" }}>
 								{message.type === "ask"
-									? "Claude wants to view source code definition names used in this directory:"
-									: "Claude viewed source code definition names used in this directory:"}
+									? "Knight wants to view source code definition names used in this directory:"
+									: "Knight viewed source code definition names used in this directory:"}
 							</span>
 						</div>
 						<CodeAccordian
@@ -305,11 +305,11 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 							<span style={{ fontWeight: "bold" }}>
 								{message.type === "ask" ? (
 									<>
-										Claude wants to search this directory for <code>{tool.regex}</code>:
+										Knight wants to search this directory for <code>{tool.regex}</code>:
 									</>
 								) : (
 									<>
-										Claude searched this directory for <code>{tool.regex}</code>:
+										Knight searched this directory for <code>{tool.regex}</code>:
 									</>
 								)}
 							</span>
@@ -382,7 +382,7 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 													Uh-oh, this could be a problem on Kodu's end. We've been alerted and
 													will resolve this ASAP. You can also{" "}
 													<a
-														href="https://discord.gg/claudedev"
+														href="https://discord.gg/knightdev"
 														style={{ color: "inherit", textDecoration: "underline" }}>
 														contact us on discord
 													</a>
@@ -431,7 +431,7 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 						</div>
 					)
 				case "user_feedback_diff":
-					const tool = JSON.parse(message.text || "{}") as ClaudeSayTool
+					const tool = JSON.parse(message.text || "{}") as KnightSayTool
 					return (
 						<div
 							style={{
@@ -495,12 +495,12 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 									</span>
 								</div>
 								<div>
-									Claude won't be able to view the command's output. Please update VSCode (
+									Knight won't be able to view the command's output. Please update VSCode (
 									<code>CMD/CTRL + Shift + P</code> → "Update") and make sure you're using a supported
 									shell: zsh, bash, fish, or PowerShell (<code>CMD/CTRL + Shift + P</code> →
 									"Terminal: Select Default Profile").{" "}
 									<a
-										href="https://github.com/saoudrizwan/claude-dev/wiki/Troubleshooting-%E2%80%90-Shell-Integration-Unavailable"
+										href="https://github.com/saoudrizwan/knight-dev/wiki/Troubleshooting-%E2%80%90-Shell-Integration-Unavailable"
 										style={{ color: "inherit", textDecoration: "underline" }}>
 										Still having trouble?
 									</a>
@@ -662,8 +662,8 @@ const ProgressIndicator = () => (
 )
 
 const Markdown = memo(({ markdown }: { markdown?: string }) => {
-	// react-markdown lets us customize elements, so here we're using their example of replacing code blocks with SyntaxHighlighter. However when there are no language matches (` or ``` without a language specifier) then we default to a normal code element for inline code. Code blocks without a language specifier shouldn't be a common occurrence as we prompt Claude to always use a language specifier.
-	// when claude wraps text in thinking tags, he doesnt use line breaks so we need to insert those ourselves to render markdown correctly
+	// react-markdown lets us customize elements, so here we're using their example of replacing code blocks with SyntaxHighlighter. However when there are no language matches (` or ``` without a language specifier) then we default to a normal code element for inline code. Code blocks without a language specifier shouldn't be a common occurrence as we prompt Knight to always use a language specifier.
+	// when knight wraps text in thinking tags, he doesnt use line breaks so we need to insert those ourselves to render markdown correctly
 	const parsed = markdown?.replace(/<thinking>([\s\S]*?)<\/thinking>/g, (match, content) => {
 		return content
 		// return `_<thinking>_\n\n${content}\n\n_</thinking>_`

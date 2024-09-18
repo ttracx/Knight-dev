@@ -118,7 +118,7 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 							marginTop: "5px",
 							color: "var(--vscode-descriptionForeground)",
 						}}>
-						When enabled, Claude will automatically read files and view directories without requiring you to
+						When enabled, Knight will automatically read files and view directories without requiring you to
 						click the Allow button.
 					</p>
 				</div>
@@ -151,8 +151,8 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 					}}>
 					<p style={{ wordWrap: "break-word", margin: 0, padding: 0 }}>
 						If you have any questions or feedback, feel free to open an issue at{" "}
-						<VSCodeLink href="https://github.com/saoudrizwan/claude-dev" style={{ display: "inline" }}>
-							https://github.com/saoudrizwan/claude-dev
+						<VSCodeLink href="https://github.com/saoudrizwan/knight-dev" style={{ display: "inline" }}>
+							https://github.com/saoudrizwan/knight-dev
 						</VSCodeLink>
 					</p>
 					<p style={{ fontStyle: "italic", margin: "10px 0 0 0", padding: 0 }}>v{version}</p>

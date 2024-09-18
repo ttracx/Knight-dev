@@ -3,7 +3,7 @@ import { KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from
 import DynamicTextArea from "react-textarea-autosize"
 import { useEvent, useMount } from "react-use"
 import { Virtuoso, type VirtuosoHandle } from "react-virtuoso"
-import { ClaudeAsk, ClaudeSayTool, ExtensionMessage } from "../../../src/shared/ExtensionMessage"
+import { KnightAsk, KnightSayTool, ExtensionMessage } from "../../../src/shared/ExtensionMessage"
 import { combineApiRequests } from "../../../src/shared/combineApiRequests"
 import { combineCommandSequences } from "../../../src/shared/combineCommandSequences"
 import { getApiMetrics } from "../../../src/shared/getApiMetrics"
@@ -26,10 +26,10 @@ interface ChatViewProps {
 const MAX_IMAGES_PER_MESSAGE = 20 // Anthropic limits to 20 images
 
 const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryView }: ChatViewProps) => {
-	const { version, claudeMessages: messages, taskHistory, apiConfiguration } = useExtensionState()
+	const { version, knightMessages: messages, taskHistory, apiConfiguration } = useExtensionState()
 
 	//const task = messages.length > 0 ? (messages[0].say === "task" ? messages[0] : undefined) : undefined) : undefined
-	const task = messages.length > 0 ? messages[0] : undefined // leaving this less safe version here since if the first message is not a task, then the extension is in a bad state and needs to be debugged (see ClaudeDev.abort)
+	const task = messages.length > 0 ? messages[0] : undefined // leaving this less safe version here since if the first message is not a task, then the extension is in a bad state and needs to be debugged (see KnightDev.abort)
 	const modifiedMessages = useMemo(() => combineApiRequests(combineCommandSequences(messages.slice(1))), [messages])
 	// has to be after api_req_finished are all reduced into api_req_started messages
 	const apiMetrics = useMemo(() => getApiMetrics(modifiedMessages), [modifiedMessages])
@@ -43,7 +43,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 	const [textAreaBaseHeight, setTextAreaBaseHeight] = useState<number | undefined>(undefined)
 
 	// we need to hold on to the ask because useEffect > lastMessage will always let us know when an ask comes in and handle it, but by the time handleMessage is called, the last message might not be the ask anymore (it could be a say that followed)
-	const [claudeAsk, setClaudeAsk] = useState<ClaudeAsk | undefined>(undefined)
+	const [knightAsk, setKnightAsk] = useState<KnightAsk | undefined>(undefined)
 
 	const [enableButtons, setEnableButtons] = useState<boolean>(false)
 	const [primaryButtonText, setPrimaryButtonText] = useState<string | undefined>(undefined)
@@ -66,30 +66,30 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 					switch (lastMessage.ask) {
 						case "api_req_failed":
 							setTextAreaDisabled(true)
-							setClaudeAsk("api_req_failed")
+							setKnightAsk("api_req_failed")
 							setEnableButtons(true)
 							setPrimaryButtonText("Retry")
 							setSecondaryButtonText("Start New Task")
 							break
 						case "mistake_limit_reached":
 							setTextAreaDisabled(false)
-							setClaudeAsk("mistake_limit_reached")
+							setKnightAsk("mistake_limit_reached")
 							setEnableButtons(true)
 							setPrimaryButtonText("Proceed Anyways")
 							setSecondaryButtonText("Start New Task")
 							break
 						case "followup":
 							setTextAreaDisabled(false)
-							setClaudeAsk("followup")
+							setKnightAsk("followup")
 							setEnableButtons(false)
 							// setPrimaryButtonText(undefined)
 							// setSecondaryButtonText(undefined)
 							break
 						case "tool":
 							setTextAreaDisabled(false)
-							setClaudeAsk("tool")
+							setKnightAsk("tool")
 							setEnableButtons(true)
-							const tool = JSON.parse(lastMessage.text || "{}") as ClaudeSayTool
+							const tool = JSON.parse(lastMessage.text || "{}") as KnightSayTool
 							switch (tool.tool) {
 								case "editedExistingFile":
 								case "newFileCreated":
@@ -104,14 +104,14 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 							break
 						case "command":
 							setTextAreaDisabled(false)
-							setClaudeAsk("command")
+							setKnightAsk("command")
 							setEnableButtons(true)
 							setPrimaryButtonText("Run Command")
 							setSecondaryButtonText("Reject")
 							break
 						case "command_output":
 							setTextAreaDisabled(false)
-							setClaudeAsk("command_output")
+							setKnightAsk("command_output")
 							setEnableButtons(true)
 							setPrimaryButtonText("Proceed While Running")
 							setSecondaryButtonText(undefined)
@@ -119,21 +119,21 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 						case "completion_result":
 							// extension waiting for feedback. but we can just present a new task button
 							setTextAreaDisabled(false)
-							setClaudeAsk("completion_result")
+							setKnightAsk("completion_result")
 							setEnableButtons(true)
 							setPrimaryButtonText("Start New Task")
 							setSecondaryButtonText(undefined)
 							break
 						case "resume_task":
 							setTextAreaDisabled(false)
-							setClaudeAsk("resume_task")
+							setKnightAsk("resume_task")
 							setEnableButtons(true)
 							setPrimaryButtonText("Resume Task")
 							setSecondaryButtonText(undefined)
 							break
 						case "resume_completed_task":
 							setTextAreaDisabled(false)
-							setClaudeAsk("resume_completed_task")
+							setKnightAsk("resume_completed_task")
 							setEnableButtons(true)
 							setPrimaryButtonText("Start New Task")
 							setSecondaryButtonText(undefined)
@@ -149,7 +149,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 								setInputValue("")
 								setTextAreaDisabled(true)
 								setSelectedImages([])
-								setClaudeAsk(undefined)
+								setKnightAsk(undefined)
 								setEnableButtons(false)
 							}
 							break
@@ -168,7 +168,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 			// this would get called after sending the first message, so we have to watch messages.length instead
 			// No messages, so user has to submit a task
 			// setTextAreaDisabled(false)
-			// setClaudeAsk(undefined)
+			// setKnightAsk(undefined)
 			// setPrimaryButtonText(undefined)
 			// setSecondaryButtonText(undefined)
 		}
@@ -177,7 +177,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 	useEffect(() => {
 		if (messages.length === 0) {
 			setTextAreaDisabled(false)
-			setClaudeAsk(undefined)
+			setKnightAsk(undefined)
 			setEnableButtons(false)
 			setPrimaryButtonText(undefined)
 			setSecondaryButtonText(undefined)
@@ -189,8 +189,8 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 		if (text || selectedImages.length > 0) {
 			if (messages.length === 0) {
 				vscode.postMessage({ type: "newTask", text, images: selectedImages })
-			} else if (claudeAsk) {
-				switch (claudeAsk) {
+			} else if (knightAsk) {
+				switch (knightAsk) {
 					case "followup":
 					case "tool":
 					case "command": // user can provide feedback to a tool or command use
@@ -212,22 +212,22 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 			setInputValue("")
 			setTextAreaDisabled(true)
 			setSelectedImages([])
-			setClaudeAsk(undefined)
+			setKnightAsk(undefined)
 			setEnableButtons(false)
 			// setPrimaryButtonText(undefined)
 			// setSecondaryButtonText(undefined)
 		}
-	}, [inputValue, selectedImages, messages.length, claudeAsk])
+	}, [inputValue, selectedImages, messages.length, knightAsk])
 
 	const startNewTask = useCallback(() => {
 		vscode.postMessage({ type: "clearTask" })
 	}, [])
 
 	/*
-	This logic depends on the useEffect[messages] above to set claudeAsk, after which buttons are shown and we then send an askResponse to the extension.
+	This logic depends on the useEffect[messages] above to set knightAsk, after which buttons are shown and we then send an askResponse to the extension.
 	*/
 	const handlePrimaryButtonClick = useCallback(() => {
-		switch (claudeAsk) {
+		switch (knightAsk) {
 			case "api_req_failed":
 			case "command":
 			case "command_output":
@@ -243,14 +243,14 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 				break
 		}
 		setTextAreaDisabled(true)
-		setClaudeAsk(undefined)
+		setKnightAsk(undefined)
 		setEnableButtons(false)
 		// setPrimaryButtonText(undefined)
 		// setSecondaryButtonText(undefined)
-	}, [claudeAsk, startNewTask])
+	}, [knightAsk, startNewTask])
 
 	const handleSecondaryButtonClick = useCallback(() => {
-		switch (claudeAsk) {
+		switch (knightAsk) {
 			case "api_req_failed":
 			case "mistake_limit_reached":
 				startNewTask()
@@ -262,11 +262,11 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 				break
 		}
 		setTextAreaDisabled(true)
-		setClaudeAsk(undefined)
+		setKnightAsk(undefined)
 		setEnableButtons(false)
 		// setPrimaryButtonText(undefined)
 		// setSecondaryButtonText(undefined)
-	}, [claudeAsk, startNewTask])
+	}, [knightAsk, startNewTask])
 
 	const handleKeyDown = useCallback(
 		(event: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -396,7 +396,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 		return modifiedMessages.filter((message) => {
 			switch (message.ask) {
 				case "completion_result":
-					// don't show a chat row for a completion_result ask without text. This specific type of message only occurs if Claude wants to execute a command as part of its completion result, in which case we interject the completion_result tool with the execute_command tool.
+					// don't show a chat row for a completion_result ask without text. This specific type of message only occurs if Knight wants to execute a command as part of its completion result, in which case we interject the completion_result tool with the execute_command tool.
 					if (message.text === "") {
 						return false
 					}
@@ -411,7 +411,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 				case "api_req_retried": // this message is used to update the latest api_req_started that the request was retried
 					return false
 				case "text":
-					// Sometimes Claude returns an empty text message, we don't want to render these. (We also use a say text for user messages, so in case they just sent images we still render that)
+					// Sometimes Knight returns an empty text message, we don't want to render these. (We also use a say text for user messages, so in case they just sent images we still render that)
 					if ((message.text ?? "") === "" && (message.images?.length ?? 0) === 0) {
 						return false
 					}
@@ -536,9 +536,9 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 						<p>
 							Thanks to{" "}
 							<VSCodeLink
-								href="https://www-cdn.anthropic.com/fed9cc193a14b84131812372d8d5857f8f304c52/Model_Card_Claude_3_Addendum.pdf"
+								href="https://www-cdn.anthropic.com/fed9cc193a14b84131812372d8d5857f8f304c52/Model_Card_Knight_3_Addendum.pdf"
 								style={{ display: "inline" }}>
-								Claude 3.5 Sonnet's agentic coding capabilities,
+								Knight 3.5 Sonnet's agentic coding capabilities,
 							</VSCodeLink>{" "}
 							I can handle complex software development tasks step-by-step. With tools that let me create
 							& edit files, explore complex projects, and execute terminal commands (after you grant

@@ -1,6 +1,6 @@
 {
-  "name": "claude-dev",
-  "displayName": "Claude Dev",
+  "name": "knight-dev",
+  "displayName": "Knight Dev",
   "description": "Autonomous coding agent right in your IDE, capable of creating/editing files, executing commands, and more with your permission every step of the way.",
   "version": "1.7.5",
   "icon": "icons/icon.png",
@@ -18,7 +18,7 @@
   "publisher": "saoudrizwan",
   "repository": {
     "type": "git",
-    "url": "https://github.com/saoudrizwan/claude-dev"
+    "url": "https://github.com/saoudrizwan/knight-dev"
   },
   "categories": [
     "AI",
@@ -29,7 +29,7 @@
     "Testing"
   ],
   "keywords": [
-    "claude",
+    "knight",
     "coding",
     "agent",
     "autonomous",
@@ -44,69 +44,69 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "claude-dev-ActivityBar",
-          "title": "Claude Dev",
+          "id": "knight-dev-ActivityBar",
+          "title": "Knight Dev",
           "icon": "$(robot)"
         }
       ]
     },
     "views": {
-      "claude-dev-ActivityBar": [
+      "knight-dev-ActivityBar": [
         {
           "type": "webview",
-          "id": "claude-dev.SidebarProvider",
+          "id": "knight-dev.SidebarProvider",
           "name": ""
         }
       ]
     },
     "commands": [
       {
-        "command": "claude-dev.plusButtonTapped",
+        "command": "knight-dev.plusButtonTapped",
         "title": "New Task",
         "icon": "$(add)"
       },
       {
-        "command": "claude-dev.historyButtonTapped",
+        "command": "knight-dev.historyButtonTapped",
         "title": "History",
         "icon": "$(history)"
       },
       {
-        "command": "claude-dev.popoutButtonTapped",
+        "command": "knight-dev.popoutButtonTapped",
         "title": "Open in Editor",
         "icon": "$(link-external)"
       },
       {
-        "command": "claude-dev.settingsButtonTapped",
+        "command": "knight-dev.settingsButtonTapped",
         "title": "Settings",
         "icon": "$(settings-gear)"
       },
       {
-        "command": "claude-dev.openInNewTab",
+        "command": "knight-dev.openInNewTab",
         "title": "Open In New Tab",
-        "category": "Claude Dev"
+        "category": "Knight Dev"
       }
     ],
     "menus": {
       "view/title": [
         {
-          "command": "claude-dev.plusButtonTapped",
+          "command": "knight-dev.plusButtonTapped",
           "group": "navigation@1",
-          "when": "view == claude-dev.SidebarProvider"
+          "when": "view == knight-dev.SidebarProvider"
         },
         {
-          "command": "claude-dev.historyButtonTapped",
+          "command": "knight-dev.historyButtonTapped",
           "group": "navigation@2",
-          "when": "view == claude-dev.SidebarProvider"
+          "when": "view == knight-dev.SidebarProvider"
         },
         {
-          "command": "claude-dev.popoutButtonTapped",
+          "command": "knight-dev.popoutButtonTapped",
           "group": "navigation@3",
-          "when": "view == claude-dev.SidebarProvider"
+          "when": "view == knight-dev.SidebarProvider"
         },
         {
-          "command": "claude-dev.settingsButtonTapped",
+          "command": "knight-dev.settingsButtonTapped",
           "group": "navigation@4",
-          "when": "view == claude-dev.SidebarProvider"
+          "when": "view == knight-dev.SidebarProvider"
         }
       ]
     }

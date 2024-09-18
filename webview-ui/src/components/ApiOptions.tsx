@@ -346,10 +346,10 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage }: ApiOptionsProps) => {
 						}}>
 						To use Google Cloud Vertex AI, you need to
 						<VSCodeLink
-							href="https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-claude#before_you_begin"
+							href="https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-knight#before_you_begin"
 							style={{ display: "inline", fontSize: "inherit" }}>
 							{
-								"1) create a Google Cloud account › enable the Vertex AI API › enable the desired Claude models,"
+								"1) create a Google Cloud account › enable the Vertex AI API › enable the desired Knight models,"
 							}
 						</VSCodeLink>{" "}
 						<VSCodeLink
@@ -422,8 +422,8 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage }: ApiOptionsProps) => {
 						}}>
 						You can use any OpenAI compatible API with models that support tool use.{" "}
 						<span style={{ color: "var(--vscode-errorForeground)" }}>
-							(<span style={{ fontWeight: 500 }}>Note:</span> Claude Dev uses complex prompts and works
-							best with Claude models. Less capable models may not work as expected.)
+							(<span style={{ fontWeight: 500 }}>Note:</span> Knight Dev uses complex prompts and works
+							best with Knight models. Less capable models may not work as expected.)
 						</span>
 					</p>
 				</div>
@@ -492,8 +492,8 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage }: ApiOptionsProps) => {
 							tool use.
 						</VSCodeLink>
 						<span style={{ color: "var(--vscode-errorForeground)" }}>
-							(<span style={{ fontWeight: 500 }}>Note:</span> Claude Dev uses complex prompts and works
-							best with Claude models. Less capable models may not work as expected.)
+							(<span style={{ fontWeight: 500 }}>Note:</span> Knight Dev uses complex prompts and works
+							best with Knight models. Less capable models may not work as expected.)
 						</span>
 					</p>
 				</div>
@@ -532,7 +532,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage }: ApiOptionsProps) => {
 }
 
 export function getOpenRouterAuthUrl(uriScheme?: string) {
-	return `https://openrouter.ai/auth?callback_url=${uriScheme || "vscode"}://saoudrizwan.claude-dev/openrouter`
+	return `https://openrouter.ai/auth?callback_url=${uriScheme || "vscode"}://saoudrizwan.knight-dev/openrouter`
 }
 
 export const formatPrice = (price: number) => {
@@ -615,7 +615,7 @@ const ModelInfoView = ({ selectedModelId, modelInfo }: { selectedModelId: string
 							fontStyle: "italic",
 							color: "var(--vscode-errorForeground)",
 						}}>
-						* This model does not support tool use or system prompts, so Claude Dev uses structured output
+						* This model does not support tool use or system prompts, so Knight Dev uses structured output
 						prompting to achieve similar results. Your mileage may vary.
 					</span>
 				</>

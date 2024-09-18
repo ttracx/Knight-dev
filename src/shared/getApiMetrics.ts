@@ -1,4 +1,4 @@
-import { ClaudeMessage } from "./ExtensionMessage"
+import { KnightMessage } from "./ExtensionMessage"
 
 interface ApiMetrics {
 	totalTokensIn: number
@@ -9,13 +9,13 @@ interface ApiMetrics {
 }
 
 /**
- * Calculates API metrics from an array of ClaudeMessages.
+ * Calculates API metrics from an array of KnightMessages.
  *
  * This function processes 'api_req_started' messages that have been combined with their
  * corresponding 'api_req_finished' messages by the combineApiRequests function.
  * It extracts and sums up the tokensIn, tokensOut, cacheWrites, cacheReads, and cost from these messages.
  *
- * @param messages - An array of ClaudeMessage objects to process.
+ * @param messages - An array of KnightMessage objects to process.
  * @returns An ApiMetrics object containing totalTokensIn, totalTokensOut, totalCacheWrites, totalCacheReads, and totalCost.
  *
  * @example
@@ -25,7 +25,7 @@ interface ApiMetrics {
  * const { totalTokensIn, totalTokensOut, totalCost } = getApiMetrics(messages);
  * // Result: { totalTokensIn: 10, totalTokensOut: 20, totalCost: 0.005 }
  */
-export function getApiMetrics(messages: ClaudeMessage[]): ApiMetrics {
+export function getApiMetrics(messages: KnightMessage[]): ApiMetrics {
 	const result: ApiMetrics = {
 		totalTokensIn: 0,
 		totalTokensOut: 0,

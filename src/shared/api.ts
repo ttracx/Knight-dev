@@ -46,11 +46,11 @@ export interface ModelInfo {
 }
 
 // Anthropic
-// https://docs.anthropic.com/en/docs/about-claude/models
+// https://docs.anthropic.com/en/docs/about-knight/models
 export type AnthropicModelId = keyof typeof anthropicModels
-export const anthropicDefaultModelId: AnthropicModelId = "claude-3-5-sonnet-20240620"
+export const anthropicDefaultModelId: AnthropicModelId = "knight-3-5-sonnet-20240620"
 export const anthropicModels = {
-	"claude-3-5-sonnet-20240620": {
+	"knight-3-5-sonnet-20240620": {
 		maxTokens: 8192,
 		contextWindow: 200_000,
 		supportsImages: true,
@@ -60,7 +60,7 @@ export const anthropicModels = {
 		cacheWritesPrice: 3.75, // $3.75 per million tokens
 		cacheReadsPrice: 0.3, // $0.30 per million tokens
 	},
-	"claude-3-opus-20240229": {
+	"knight-3-opus-20240229": {
 		maxTokens: 4096,
 		contextWindow: 200_000,
 		supportsImages: true,
@@ -70,7 +70,7 @@ export const anthropicModels = {
 		cacheWritesPrice: 18.75,
 		cacheReadsPrice: 1.5,
 	},
-	"claude-3-haiku-20240307": {
+	"knight-3-haiku-20240307": {
 		maxTokens: 4096,
 		contextWindow: 200_000,
 		supportsImages: true,
@@ -85,9 +85,9 @@ export const anthropicModels = {
 // AWS Bedrock
 // https://docs.aws.amazon.com/bedrock/latest/userguide/conversation-inference.html
 export type BedrockModelId = keyof typeof bedrockModels
-export const bedrockDefaultModelId: BedrockModelId = "anthropic.claude-3-5-sonnet-20240620-v1:0"
+export const bedrockDefaultModelId: BedrockModelId = "anthropic.knight-3-5-sonnet-20240620-v1:0"
 export const bedrockModels = {
-	"anthropic.claude-3-5-sonnet-20240620-v1:0": {
+	"anthropic.knight-3-5-sonnet-20240620-v1:0": {
 		maxTokens: 8192,
 		contextWindow: 200_000,
 		supportsImages: true,
@@ -95,7 +95,7 @@ export const bedrockModels = {
 		inputPrice: 3.0,
 		outputPrice: 15.0,
 	},
-	"anthropic.claude-3-opus-20240229-v1:0": {
+	"anthropic.knight-3-opus-20240229-v1:0": {
 		maxTokens: 4096,
 		contextWindow: 200_000,
 		supportsImages: true,
@@ -103,7 +103,7 @@ export const bedrockModels = {
 		inputPrice: 15.0,
 		outputPrice: 75.0,
 	},
-	"anthropic.claude-3-haiku-20240307-v1:0": {
+	"anthropic.knight-3-haiku-20240307-v1:0": {
 		maxTokens: 4096,
 		contextWindow: 200_000,
 		supportsImages: true,
@@ -116,9 +116,9 @@ export const bedrockModels = {
 // OpenRouter
 // https://openrouter.ai/models?order=newest&supported_parameters=tools
 export type OpenRouterModelId = keyof typeof openRouterModels
-export const openRouterDefaultModelId: OpenRouterModelId = "anthropic/claude-3.5-sonnet:beta"
+export const openRouterDefaultModelId: OpenRouterModelId = "anthropic/knight-3.5-sonnet:beta"
 export const openRouterModels = {
-	"anthropic/claude-3.5-sonnet:beta": {
+	"anthropic/knight-3.5-sonnet:beta": {
 		maxTokens: 8192,
 		contextWindow: 200_000,
 		supportsImages: true,
@@ -128,7 +128,7 @@ export const openRouterModels = {
 		cacheWritesPrice: 3.75,
 		cacheReadsPrice: 0.3,
 	},
-	"anthropic/claude-3-opus:beta": {
+	"anthropic/knight-3-opus:beta": {
 		maxTokens: 4096,
 		contextWindow: 200_000,
 		supportsImages: true,
@@ -138,7 +138,7 @@ export const openRouterModels = {
 		cacheWritesPrice: 18.75,
 		cacheReadsPrice: 1.5,
 	},
-	"anthropic/claude-3-haiku:beta": {
+	"anthropic/knight-3-haiku:beta": {
 		maxTokens: 4096,
 		contextWindow: 200_000,
 		supportsImages: true,
@@ -209,7 +209,7 @@ export const openRouterModels = {
 	// 	outputPrice: 0.06,
 	// },
 	// OpenRouter needs to fix mapping gemini 1.5 responses for tool calls properly, they return content with line breaks formatted wrong (too many escapes), and throw errors for being in the wrong order when they're not. They also cannot handle feedback given to a request with multiple tools. Giving feedback to one tool use requests works fine. ("Please ensure that function response turn comes immediately after a function call turn. And the number of function response parts should be equal to number of function call parts of the function call turn.")
-	// UPDATE: I keep getting "400: Please ensure that function call turn comes immediately after a user turn or after a function response turn.", which gets fixed as soon as i switch to openrouter/claude, so it's obviously an error on openrouters end transforming the message structure. This is likely the culprit behind the tool order error people have seen with gpt4o.
+	// UPDATE: I keep getting "400: Please ensure that function call turn comes immediately after a user turn or after a function response turn.", which gets fixed as soon as i switch to openrouter/knight, so it's obviously an error on openrouters end transforming the message structure. This is likely the culprit behind the tool order error people have seen with gpt4o.
 	// "google/gemini-pro-1.5": {
 	// 	maxTokens: 8192,
 	// 	contextWindow: 2_097_152,
@@ -273,11 +273,11 @@ export const openRouterModels = {
 } as const satisfies Record<string, ModelInfo>
 
 // Vertex AI
-// https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-claude
+// https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-knight
 export type VertexModelId = keyof typeof vertexModels
-export const vertexDefaultModelId: VertexModelId = "claude-3-5-sonnet@20240620"
+export const vertexDefaultModelId: VertexModelId = "knight-3-5-sonnet@20240620"
 export const vertexModels = {
-	"claude-3-5-sonnet@20240620": {
+	"knight-3-5-sonnet@20240620": {
 		maxTokens: 8192,
 		contextWindow: 200_000,
 		supportsImages: true,
@@ -285,7 +285,7 @@ export const vertexModels = {
 		inputPrice: 3.0,
 		outputPrice: 15.0,
 	},
-	"claude-3-opus@20240229": {
+	"knight-3-opus@20240229": {
 		maxTokens: 4096,
 		contextWindow: 200_000,
 		supportsImages: true,
@@ -293,7 +293,7 @@ export const vertexModels = {
 		inputPrice: 15.0,
 		outputPrice: 75.0,
 	},
-	"claude-3-haiku@20240307": {
+	"knight-3-haiku@20240307": {
 		maxTokens: 4096,
 		contextWindow: 200_000,
 		supportsImages: true,

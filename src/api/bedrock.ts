@@ -3,7 +3,7 @@ import { Anthropic } from "@anthropic-ai/sdk"
 import { ApiHandler, ApiHandlerMessageResponse } from "."
 import { ApiHandlerOptions, bedrockDefaultModelId, BedrockModelId, bedrockModels, ModelInfo } from "../shared/api"
 
-// https://docs.anthropic.com/en/api/claude-on-amazon-bedrock
+// https://docs.anthropic.com/en/api/knight-on-amazon-bedrock
 export class AwsBedrockHandler implements ApiHandler {
 	private options: ApiHandlerOptions
 	private client: AnthropicBedrock

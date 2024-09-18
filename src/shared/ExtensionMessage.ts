@@ -19,21 +19,21 @@ export interface ExtensionState {
 	customInstructions?: string
 	alwaysAllowReadOnly?: boolean
 	uriScheme?: string
-	claudeMessages: ClaudeMessage[]
+	knightMessages: KnightMessage[]
 	taskHistory: HistoryItem[]
 	shouldShowAnnouncement: boolean
 }
 
-export interface ClaudeMessage {
+export interface KnightMessage {
 	ts: number
 	type: "ask" | "say"
-	ask?: ClaudeAsk
-	say?: ClaudeSay
+	ask?: KnightAsk
+	say?: KnightSay
 	text?: string
 	images?: string[]
 }
 
-export type ClaudeAsk =
+export type KnightAsk =
 	| "followup"
 	| "command"
 	| "command_output"
@@ -44,7 +44,7 @@ export type ClaudeAsk =
 	| "resume_completed_task"
 	| "mistake_limit_reached"
 
-export type ClaudeSay =
+export type KnightSay =
 	| "task"
 	| "error"
 	| "api_req_started"
@@ -58,7 +58,7 @@ export type ClaudeSay =
 	| "tool"
 	| "shell_integration_warning"
 
-export interface ClaudeSayTool {
+export interface KnightSayTool {
 	tool:
 		| "editedExistingFile"
 		| "newFileCreated"
