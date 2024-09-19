@@ -534,9 +534,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 					<div style={{ padding: "0 20px", flexShrink: 0 }}>
 						<h2>What can I do for you?</h2>
 						<p>
-							I can handle complex software development tasks step-by-step. With tools that let me create
-							& edit files, explore complex projects, and execute terminal commands (after you grant
-							permission), I can assist you in ways that go beyond simple code completion or tech support.
+						As an LMOS (Layered Model of Operational Synthesis) Level 7 AI Reasoning Variant, I'm equipped to handle complex software development tasks with a structured, adaptive approach. I can guide you through all stages of development, from MVP creation to intricate system architecture, always prioritizing efficiency and user-centric design.
 						</p>
 					</div>
 					{taskHistory.length > 0 && <HistoryPreview showHistoryView={showHistoryView} />}
