@@ -5,3 +5,4 @@ node_modules
 *.vsix
 icons/.DS_Store
 src/.DS_Store
+.DS_Store
