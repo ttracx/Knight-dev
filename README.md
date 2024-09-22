@@ -1,10 +1,6 @@
 # Knight Dev
 
 <p align="center">
-  <img src="https://media.githubusercontent.com/media/ttracx/knight-dev/main/demo.gif" width="100%" />
-</p>
-
-<p align="center">
   <a href="https://marketplace.visualstudio.com/items?itemName=ttracx.knight-dev" target="_blank"><strong>Download VSCode Extension</strong></a> | <a href="https://discord.gg/knightdev" target="_blank"><strong>Join the Discord</strong></a>
 </p>
 
@@ -57,9 +53,7 @@ Knight always asks for your permission first before any tools are executed or in
 
 ![image](https://github.com/ttracx/knight-dev/assets/7799382/e6435441-9400-41c9-98a9-63f75c5d45be)
 
-## Contribution
-
-Paul Graham said it best, "if you build something now that barely works with AI, the next models will make it _really_ work." I've built this project with the assumption that scaling laws will continue to improve the quality (and cost) of AI models, and what might be difficult for Claude 3.5 Sonnet today will be effortless for future generations. That is the design philosophy I'd like to develop this project with, so it will always be updated with the best models, tools, and capabilities available–without wasting effort on implementing stopgaps like cheaper agents. With that said, I'm always open to suggestions and feedback, so please feel free to contribute to this project by submitting issues and pull requests.
+## Getting Started
 
 To build Knight Dev locally, follow these steps:
 
