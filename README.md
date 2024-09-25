@@ -1,61 +1,78 @@
 # Knight Dev
 
 <p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=ttracx.knight-dev" target="_blank"><strong>Download VSCode Extension</strong></a> | <a href="https://discord.gg/knightdev" target="_blank"><strong>Join the Discord</strong></a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=ttracx.knight-dev" target="_blank"><strong>Download VSCode Extension</strong></a>
 </p>
 
-Thanks to [Claude 3.5 Sonnet's agentic coding capabilities](https://www-cdn.anthropic.com/fed9cc193a14b84131812372d8d5857f8f304c52/Model_Card_Knight_3_Addendum.pdf) Knight Dev can handle complex software development tasks step-by-step. With tools that let him create & edit files, explore complex projects, and execute terminal commands (after you grant permission), he can assist you in ways that go beyond simple code completion or tech support. While autonomous AI scripts traditionally run in sandboxed environments, Knight Dev provides a human-in-the-loop GUI to supervise every file changed and command executed, providing a safe and accessible way to explore the potential of agentic AI.
+# Welcome to the Future of AI Development at International Paper
 
--   Paste images in chat to use Knight's vision capabilities and turn mockups into fully functional applications or fix bugs with screenshots
--   Review and edit diffs of every change Knight makes right in the editor, or provide feedback in chat until you're satisfied with the result
--   Executes commands directly in your terminal, keeping Knight updated on any output as he works (letting him react to server errors!)
--   Monitors workspace problems to keep Knight updated on linter/compiler/build issues, letting him proactively fix errors on his own (adding missing imports, fixing syntax errors, etc.)
--   Presents permission buttons (like 'Approve terminal command') before tool use or sending information to the API
--   Keep track of total tokens and API usage cost for the entire task loop and individual requests
--   When a task is completed, Knight determines if he can present the result to you with a terminal command like `open -a "Google Chrome" index.html`, which you run with a click of a button
+At International Paper, we’re always exploring innovative ways to leverage cutting-edge technologies. With LMOS Level 7 AI at the core of our operational strategy, we are pushing the boundaries of what’s possible in both the industrial and corporate landscapes. Let’s introduce you to **Knight Dev**, a powerful assistant, fine-tuned for complex, real-time coding and problem-solving scenarios. Designed to work harmoniously within your development processes, Knight Dev not only reflects the multi-layered principles of **LMOS** but also exemplifies how AI can optimize operational efficiency in a human-centric way.
 
-_**Pro tip**: Use the `Cmd + Shift + P` shortcut to open the command palette and type `Knight Dev: Open In New Tab` to start a new task right in the editor._
+## Knight Dev – Agentic AI Meets Industrial Expertise
 
-## How it works
+Thanks to **Claude 3.5 Sonnet's agentic coding capabilities**, Knight Dev empowers developers at International Paper to tackle intricate software tasks step-by-step. Leveraging tools for file creation, project navigation, and even terminal command execution (with your approval), Knight Dev stands apart from traditional AI as it offers an interactive, human-in-the-loop interface. This aligns seamlessly with **LMOS’s Core Principles**, including **Iterative Refinement**, **Contextual Adaptation**, and **Predictive Modeling**, ensuring that every task is tailored to International Paper's high standards of safety, security, and performance.
 
-Knight Dev uses an autonomous task execution loop with chain-of-thought prompting and access to powerful tools that give him the ability to accomplish nearly any task. Start by providing a task and the loop fires off, where Knight might use certain tools (with your permission) to accomplish each step in his thought process.
+### Key Features of Knight Dev for International Paper:
+- **Visual Integration**: Paste images of mockups or error messages, and Knight will not only diagnose issues but also propose solutions. Just as **LMOS** emphasizes multi-layered analysis, Knight provides a systematic approach to resolving problems.
+- **File Monitoring & Command Execution**: Every command and file change happens under your supervision. This ensures operational safety—a top priority at International Paper—while enabling Knight to proactively address errors, whether they involve safety system scripts or backend code.
+- **Real-time Workspace Monitoring**: Knight tracks build errors and linter issues, automatically fixing errors in syntax, imports, and project dependencies, making development smoother and more efficient across our global infrastructure.
+- **Task Loop with Chain-of-Thought Execution**: Knight employs a strategic task execution model, processing tasks step-by-step, akin to **LMOS’s Layered Model of Operational Synthesis**. This ensures tasks are completed with precision and without overwhelming the context window.
 
-### Tools
+## Tailored for International Paper’s Digital Future
+Knight Dev is built to support a broad range of coding languages and frameworks—from **Python and JavaScript** to **Go and Rust**—ensuring it meets International Paper’s diverse technical requirements. Knight uses advanced parsing techniques and regex tools to navigate projects like an expert developer. It can extract definitions, search patterns, and implement improvements autonomously, allowing teams to focus on higher-level tasks like AI model refinement or safety protocol automation.
 
-Knight Dev has access to the following capabilities:
+## Knight Dev in Action:
+- **File System Integration**: Knight reads and writes files based on task relevance, streamlining processes such as safety report generation or industrial system configuration updates.
+- **Operational Safety**: In keeping with **LMOS’s commitment to risk mitigation**, Knight asks for permission before executing commands or sending data to the API, ensuring human control at every step.
+- **Proactive Assistance**: With continuous monitoring, Knight preemptively corrects problems, helping prevent potential disruptions in mission-critical systems, especially those related to safety and industrial monitoring.
 
-1. **`execute_command`**: Execute terminal commands on the system (only with your permission, output is streamed into the chat)
-2. **`read_file`**: Read the contents of a file at the specified path
-3. **`write_to_file`**: Write content to a file at the specified path, automatically creating any necessary directories
-4. **`list_files`**: List all paths for files in the specified directory. When `recursive = true`, it recursively lists all files in the directory and its nested folders (excludes files in .gitignore). When `recursive = false`, it lists only top-level files (useful for generic file operations like retrieving a file from your Desktop).
-5. **`list_code_definition_names`**: Parses all source code files at the top level of the specified directory to extract names of key elements like classes and functions (see more below)
-6. **`search_files`**: Search files in a specified directory for text that matches a given regex pattern (useful for refactoring code, addressing TODOs and FIXMEs, removing dead code, etc.)
-7. **`ask_followup_question`**: Ask the user a question to gather additional information needed to complete a task (due to the autonomous nature of the program, this isn't a typical chatbot–Knight Dev must explicitly interrupt his task loop to ask for more information)
-8. **`attempt_completion`**: Present the result to the user after completing a task, potentially with a terminal command to kickoff a demonstration
+## How Knight Dev Embodies LMOS Level 7 AI Principles:
+1. **Multi-Layered Analysis**: Like LMOS, Knight Dev uses layered problem-solving techniques, ensuring that each task is tackled strategically, whether refining operational safety scripts or automating system diagnostics.
+2. **Iterative Refinement**: Knight continuously improves its outputs by incorporating feedback loops, ensuring that results align with International Paper’s evolving needs.
+3. **Efficiency and User-Centric Design**: Knight's user-focused GUI ensures every command or file change happens under your direct supervision, safeguarding the integrity of critical systems at International Paper.
 
-### Working in Existing Projects
+## Start Using Knight Dev
+Get Knight Dev up and running by cloning the repository and following the instructions below. With Knight Dev integrated into your environment, you’re empowered to take your development workflows to the next level—harnessing the true potential of **Level 7 AI** to enhance productivity and innovation.
 
-When given a task in an existing project, Knight will look for the most relevant files to read and edit the same way you or I would–by first looking at the names of directories, files, classes, and functions since these names tend to reflect their purpose and role within the broader system, and often encapsulate high-level concepts and relationships that help understand a project's overall architecture. With tools like `list_code_definition_names` and `search_files`, Knight is able to extract names of various elements in a project to determine what files are most relevant to a given task without you having to mention `@file`s or `@folder`s yourself.
+```bash
+git clone https://github.com/ttracx/knight-dev.git
+code knight-dev
+npm run install:all
+```
 
-1. **File Structure**: When a task is started, Knight is given an overview of your project's file structure. It turns out Claude 3.5 Sonnet is _really_ good at inferring what it needs to process further just from these file names alone.
+By aligning with LMOS’s Core Principles, Knight Dev isn’t just another tool—it’s the future of intelligent software development at International Paper. Let’s build the next generation of solutions together.
 
-2. **Source Code Definitions**: Knight may then use the `list_code_definition_names` tool on specific directories of interest. This tool uses [tree-sitter](https://github.com/tree-sitter/tree-sitter) to parse source code with custom tag queries that extract names of classes, functions, methods, and other definitions. It works by first identifying source code files that tree-sitter can parse (currently supports `python`, `javascript`, `typescript`, `ruby`, `go`, `java`, `php`, `rust`, `c`, `c++`, `c#`, `swift`), then parsing each file into an abstract syntax tree, and finally applying a language-specific query to extract definition names (you can see the exact query used for each language in `src/parse-source-code/queries`). The results are formatted into a concise & readable output that Knight can easily interpret to quickly understand the code's structure and purpose.
+## How It Works
+Knight Dev operates using an **autonomous task execution loop** with **chain-of-thought prompting** and access to a suite of powerful tools, enabling it to handle a variety of tasks. Here's how the process works:
 
-3. **Search Files**: Knight can also use the `search_files` tool to search for specific patterns or content across multiple files. This tool uses [ripgrep](https://github.com/BurntSushi/ripgrep) to perform regex searches on files in a specified directory. The results are formatted into a concise & readable output that Knight can easily interpret to quickly understand the code's structure and purpose. This can be useful for tasks like refactoring function names, updating imports, addressing TODOs and FIXMEs, etc.
+1. **Task Initiation**: Start by providing a task, and Knight Dev begins working through each step of the task using strategic decision-making. Knight may ask for permission before using specific tools, ensuring full control at each stage.
+2. **Permission-Driven Execution**: Each command or action that involves file modification, terminal execution, or API calls is gated by a user permission system. This reflects **LMOS’s User-Centric** principle, placing you in control of every step.
+3. **Task Loop Execution**: Knight autonomously loops through the task execution, utilizing its toolset while continuously refining the process based on your feedback. This mirrors **LMOS’s Iterative Refinement**, ensuring that tasks evolve for maximum efficiency.
+4. **Command Execution**: Knight can execute terminal commands on your system, read and write files, or list files in directories based on your input. This powerful integration ensures seamless functionality across all environments.
 
-4. **Read Relevant Files**: With insights gained from the names of various files and source code definitions, Knight can then use the `read_file` tool to examine specific files that are most relevant to the task at hand.
+## Tools
+Knight Dev comes equipped with the following tools to enhance its functionality:
 
-By carefully managing what information is added to context, Knight can provide valuable assistance even for complex, large-scale projects without overwhelming its context window.
+- **execute_command**: Executes terminal commands directly, with the output streamed to the chat interface, providing real-time feedback.
+- **read_file**: Reads contents of any file to understand the current state of the project, enhancing contextual awareness.
+- **write_to_file**: Writes or modifies files as needed, making changes and updates effortless.
+- **list_files**: Lists files in directories for easy navigation through complex file structures.
+- **list_code_definition_names**: Extracts names of classes, functions, and other elements, ensuring Knight understands the project structure without needing explicit input.
+- **search_files**: Uses powerful regex to search through code, allowing for refactoring and automated fixes.
 
-### Only With Your Permission
+## Working in Existing Projects
+When tasked with working in an existing project, Knight Dev follows these steps:
 
-Knight always asks for your permission first before any tools are executed or information is sent back to the API. This puts you in control of this agentic loop, every step of the way.
+1. **File Structure Overview**: Knight receives an overview of your project’s file structure and parses it, understanding the relationships between files and directories.
+2. **Code Definitions**: By using tools like `list_code_definition_names`, Knight identifies key components such as classes, methods, and functions, giving it a deep understanding of your codebase. This allows Knight to focus on the most relevant parts of your project without requiring explicit instructions.
+3. **Targeted Search**: Knight can perform regex searches through files to identify areas needing updates, improvements, or refactoring. This includes finding TODOs, updating imports, or addressing syntax errors.
+4. **Context Management**: By managing the information loaded into its context window, Knight ensures it can handle large-scale projects without losing sight of key details.
 
-![image](https://github.com/ttracx/knight-dev/assets/7799382/e6435441-9400-41c9-98a9-63f75c5d45be)
+## Only With Your Permission
+Knight Dev puts **you in control**. It always asks for your explicit permission before executing any tool or command, ensuring that the AI never operates outside your desired parameters. This aligns with International Paper's commitment to **operational safety** and **secure development practices**. Every tool invocation, file read, or command execution is under your supervision, safeguarding the integrity of critical systems.
 
 ## Getting Started
-
-To build Knight Dev locally, follow these steps:
+To get started with Knight Dev and explore its full range of capabilities, simply follow these steps to set up the environment locally:
 
 1. Clone the repository:
     ```bash
@@ -65,12 +82,14 @@ To build Knight Dev locally, follow these steps:
     ```bash
     code knight-dev
     ```
-3. Install the necessary dependencies for the extension and webview-gui:
+3. Install the necessary dependencies:
     ```bash
     npm run install:all
     ```
-4. Launch by pressing `F5` (or `Run`->`Start Debugging`) to open a new VSCode window with the extension loaded. (You may need to install the [esbuild problem matchers extension](https://marketplace.visualstudio.com/items?itemName=connor4312.esbuild-problem-matchers) if you run into issues building the project.)
+4. Launch Knight Dev by pressing `F5` or navigating to **Run -> Start Debugging** to open a new VSCode window with the extension loaded.
+
+By following this process, Knight Dev will be ready to assist you in real-time, seamlessly integrating into your workflow at International Paper.
 
 ## License
+This project is licensed under the **MIT License**. For full details, see the LICENSE file in the repository.
 
-This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
