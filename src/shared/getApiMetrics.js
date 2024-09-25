@@ -1,5 +1,5 @@
 /**
- * Calculates API metrics from an array of KnightMessages.
+ * Calculates API metrics from an array of knightMessages.
  *
  * This function processes 'api_req_started' messages that have been combined with their
  * corresponding 'api_req_finished' messages by the combineApiRequests function.

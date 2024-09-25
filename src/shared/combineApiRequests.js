@@ -1,5 +1,5 @@
 /**
- * Combines API request start and finish messages in an array of KnightMessages.
+ * Combines API request start and finish messages in an array of knightMessages.
  *
  * This function looks for pairs of 'api_req_started' and 'api_req_finished' messages.
  * When it finds a pair, it combines them into a single 'api_req_combined' message.

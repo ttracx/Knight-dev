@@ -1,7 +1,7 @@
 import { KnightMessage } from "./ExtensionMessage"
 
 /**
- * Combines sequences of command and command_output messages in an array of KnightMessages.
+ * Combines sequences of command and command_output messages in an array of knightMessages.
  *
  * This function processes an array of KnightMessage objects, looking for sequences
  * where a 'command' message is followed by one or more 'command_output' messages.

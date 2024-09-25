@@ -466,26 +466,26 @@ export class KnightDevProvider {
     Task history is a significant undertaking as it would require refactoring how we wait for ask responses--it would need to be a hidden knightMessage, so that user's can resume tasks that ended with an ask.
     */
     // private providerInstanceIdentifier = Date.now()
-    // getKnightMessagesStateKey() {
+    // getknightMessagesStateKey() {
     // 	return `knightMessages-${this.providerInstanceIdentifier}`
     // }
     // getApiConversationHistoryStateKey() {
     // 	return `apiConversationHistory-${this.providerInstanceIdentifier}`
     // }
     // knight messages to present in the webview
-    // getKnightMessages(): KnightMessage[] {
-    // 	// const messages = (await this.getGlobalState(this.getKnightMessagesStateKey())) as KnightMessage[]
+    // getknightMessages(): KnightMessage[] {
+    // 	// const messages = (await this.getGlobalState(this.getknightMessagesStateKey())) as KnightMessage[]
     // 	// return messages || []
     // 	return this.knightMessages
     // }
-    // setKnightMessages(messages: KnightMessage[] | undefined) {
-    // 	// await this.updateGlobalState(this.getKnightMessagesStateKey(), messages)
+    // setknightMessages(messages: KnightMessage[] | undefined) {
+    // 	// await this.updateGlobalState(this.getknightMessagesStateKey(), messages)
     // 	this.knightMessages = messages || []
     // }
     // addKnightMessage(message: KnightMessage): KnightMessage[] {
-    // 	// const messages = await this.getKnightMessages()
+    // 	// const messages = await this.getknightMessages()
     // 	// messages.push(message)
-    // 	// await this.setKnightMessages(messages)
+    // 	// await this.setknightMessages(messages)
     // 	// return messages
     // 	this.knightMessages.push(message)
     // 	return this.knightMessages

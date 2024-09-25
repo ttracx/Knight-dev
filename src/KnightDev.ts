@@ -14,7 +14,7 @@ import { TerminalManager } from "./integrations/TerminalManager"
 import { LIST_FILES_LIMIT, listFiles, parseSourceCodeForDefinitionsTopLevel } from "./parse-source-code"
 import { KnightDevProvider } from "./providers/KnightDevProvider"
 import { ApiConfiguration } from "./shared/api"
-import { KnightRequestResult } from "./shared/KnightRequestResult"
+import { KnightRequestResult } from "./shared/knightRequestResult"
 import { combineApiRequests } from "./shared/combineApiRequests"
 import { combineCommandSequences } from "./shared/combineCommandSequences"
 import { KnightAsk, KnightMessage, KnightSay, KnightSayTool } from "./shared/ExtensionMessage"
@@ -253,7 +253,7 @@ export class KnightDev {
 	private customInstructions?: string
 	private alwaysAllowReadOnly: boolean
 	apiConversationHistory: Anthropic.MessageParam[] = []
-	KnightMessages: KnightMessage[] = []
+	knightMessages: KnightMessage[] = []
 	private askResponse?: KnightAskResponse
 	private askResponseText?: string
 	private askResponseImages?: string[]
@@ -350,7 +350,7 @@ export class KnightDev {
 		}
 	}
 
-	private async getSavedKnightMessages(): Promise<KnightMessage[]> {
+	private async getSavedknightMessages(): Promise<KnightMessage[]> {
 		const filePath = path.join(await this.ensureTaskDirectoryExists(), "Knight_messages.json")
 		const fileExists = await fs
 			.access(filePath)
@@ -362,27 +362,27 @@ export class KnightDev {
 		return []
 	}
 
-	private async addToKnightMessages(message: KnightMessage) {
-		this.KnightMessages.push(message)
-		await this.saveKnightMessages()
+	private async addToknightMessages(message: KnightMessage) {
+		this.knightMessages.push(message)
+		await this.saveknightMessages()
 	}
 
-	private async overwriteKnightMessages(newMessages: KnightMessage[]) {
-		this.KnightMessages = newMessages
-		await this.saveKnightMessages()
+	private async overwriteknightMessages(newMessages: KnightMessage[]) {
+		this.knightMessages = newMessages
+		await this.saveknightMessages()
 	}
 
-	private async saveKnightMessages() {
+	private async saveknightMessages() {
 		try {
 			const filePath = path.join(await this.ensureTaskDirectoryExists(), "Knight_messages.json")
-			await fs.writeFile(filePath, JSON.stringify(this.KnightMessages))
+			await fs.writeFile(filePath, JSON.stringify(this.knightMessages))
 			// combined as they are in ChatView
-			const apiMetrics = getApiMetrics(combineApiRequests(combineCommandSequences(this.KnightMessages.slice(1))))
-			const taskMessage = this.KnightMessages[0] // first message is always the task say
+			const apiMetrics = getApiMetrics(combineApiRequests(combineCommandSequences(this.knightMessages.slice(1))))
+			const taskMessage = this.knightMessages[0] // first message is always the task say
 			const lastRelevantMessage =
-				this.KnightMessages[
+				this.knightMessages[
 					findLastIndex(
-						this.KnightMessages,
+						this.knightMessages,
 						(m) => !(m.ask === "resume_task" || m.ask === "resume_completed_task")
 					)
 				]
@@ -414,7 +414,7 @@ export class KnightDev {
 		this.askResponseImages = undefined
 		const askTs = Date.now()
 		this.lastMessageTs = askTs
-		await this.addToKnightMessages({ ts: askTs, type: "ask", ask: type, text: question })
+		await this.addToknightMessages({ ts: askTs, type: "ask", ask: type, text: question })
 		await this.providerRef.deref()?.postStateToWebview()
 		await pWaitFor(() => this.askResponse !== undefined || this.lastMessageTs !== askTs, { interval: 100 })
 		if (this.lastMessageTs !== askTs) {
@@ -433,14 +433,14 @@ export class KnightDev {
 		}
 		const sayTs = Date.now()
 		this.lastMessageTs = sayTs
-		await this.addToKnightMessages({ ts: sayTs, type: "say", say: type, text: text, images })
+		await this.addToknightMessages({ ts: sayTs, type: "say", say: type, text: text, images })
 		await this.providerRef.deref()?.postStateToWebview()
 	}
 
 	private async startTask(task?: string, images?: string[]): Promise<void> {
-		// conversationHistory (for API) and KnightMessages (for webview) need to be in sync
-		// if the extension process were killed, then on restart the KnightMessages might not be empty, so we need to set it to [] when we create a new KnightDev client (otherwise webview would show stale messages from previous session)
-		this.KnightMessages = []
+		// conversationHistory (for API) and knightMessages (for webview) need to be in sync
+		// if the extension process were killed, then on restart the knightMessages might not be empty, so we need to set it to [] when we create a new KnightDev client (otherwise webview would show stale messages from previous session)
+		this.knightMessages = []
 		this.apiConversationHistory = []
 		await this.providerRef.deref()?.postStateToWebview()
 
@@ -457,42 +457,42 @@ export class KnightDev {
 	}
 
 	private async resumeTaskFromHistory() {
-		const modifiedKnightMessages = await this.getSavedKnightMessages()
+		const modifiedknightMessages = await this.getSavedknightMessages()
 
 		// Need to modify Knight messages for good ux, i.e. if the last message is an api_request_started, then remove it otherwise the user will think the request is still loading
-		const lastApiReqStartedIndex = modifiedKnightMessages.reduce(
+		const lastApiReqStartedIndex = modifiedknightMessages.reduce(
 			(lastIndex, m, index) => (m.type === "say" && m.say === "api_req_started" ? index : lastIndex),
 			-1
 		)
-		const lastApiReqFinishedIndex = modifiedKnightMessages.reduce(
+		const lastApiReqFinishedIndex = modifiedknightMessages.reduce(
 			(lastIndex, m, index) => (m.type === "say" && m.say === "api_req_finished" ? index : lastIndex),
 			-1
 		)
 		if (lastApiReqStartedIndex > lastApiReqFinishedIndex && lastApiReqStartedIndex !== -1) {
-			modifiedKnightMessages.splice(lastApiReqStartedIndex, 1)
+			modifiedknightMessages.splice(lastApiReqStartedIndex, 1)
 		}
 
 		// Remove any resume messages that may have been added before
 		const lastRelevantMessageIndex = findLastIndex(
-			modifiedKnightMessages,
+			modifiedknightMessages,
 			(m) => !(m.ask === "resume_task" || m.ask === "resume_completed_task")
 		)
 		if (lastRelevantMessageIndex !== -1) {
-			modifiedKnightMessages.splice(lastRelevantMessageIndex + 1)
+			modifiedknightMessages.splice(lastRelevantMessageIndex + 1)
 		}
 
-		await this.overwriteKnightMessages(modifiedKnightMessages)
-		this.KnightMessages = await this.getSavedKnightMessages()
+		await this.overwriteknightMessages(modifiedknightMessages)
+		this.knightMessages = await this.getSavedknightMessages()
 
 		// Now present the Knight messages to the user and ask if they want to resume
 
-		const lastKnightMessage = this.KnightMessages
+		const lastKnightMessage = this.knightMessages
 			.slice()
 			.reverse()
 			.find((m) => !(m.ask === "resume_task" || m.ask === "resume_completed_task")) // could be multiple resume tasks
-		// const lastKnightMessage = this.KnightMessages[lastKnightMessageIndex]
+		// const lastKnightMessage = this.knightMessages[lastKnightMessageIndex]
 		// could be a completion result with a command
-		// const secondLastKnightMessage = this.KnightMessages
+		// const secondLastKnightMessage = this.knightMessages
 		// 	.slice()
 		// 	.reverse()
 		// 	.find(
@@ -1546,7 +1546,7 @@ ${this.customInstructions.trim()}
 			}
 
 			// If the last API request's total token usage is close to the context window, truncate the conversation history to free up space for the new request
-			const lastApiReqFinished = findLast(this.KnightMessages, (m) => m.say === "api_req_finished")
+			const lastApiReqFinished = findLast(this.knightMessages, (m) => m.say === "api_req_finished")
 			if (lastApiReqFinished && lastApiReqFinished.text) {
 				const {
 					tokensIn,
@@ -1638,13 +1638,13 @@ ${this.customInstructions.trim()}
 		await this.addToApiConversationHistory({ role: "user", content: userContent })
 
 		// since we sent off a placeholder api_req_started message to update the webview while waiting to actually start the API request (to load potential details for example), we need to update the text of that message
-		const lastApiReqIndex = findLastIndex(this.KnightMessages, (m) => m.say === "api_req_started")
-		this.KnightMessages[lastApiReqIndex].text = JSON.stringify({
+		const lastApiReqIndex = findLastIndex(this.knightMessages, (m) => m.say === "api_req_started")
+		this.knightMessages[lastApiReqIndex].text = JSON.stringify({
 			request: userContent
 				.map((block) => formatContentBlockToMarkdown(block, this.apiConversationHistory))
 				.join("\n\n"),
 		})
-		await this.saveKnightMessages()
+		await this.saveknightMessages()
 		await this.providerRef.deref()?.postStateToWebview()
 
 		try {
