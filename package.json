@@ -46,7 +46,7 @@
         {
           "id": "knight-dev-ActivityBar",
           "title": "Knight Dev",
-          "icon": "$(robot)"
+          "icon": "icons/icon.png"
         }
       ]
     },
