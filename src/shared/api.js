@@ -1,6 +1,6 @@
-export const anthropicDefaultModelId = "knight-3-5-sonnet-20240620";
+export const anthropicDefaultModelId = "claude-3-5-sonnet-20240620";
 export const anthropicModels = {
-    "knight-3-5-sonnet-20240620": {
+    "claude-3-5-sonnet-20240620": {
         maxTokens: 8192,
         contextWindow: 200_000,
         supportsImages: true,
@@ -10,7 +10,7 @@ export const anthropicModels = {
         cacheWritesPrice: 3.75, // $3.75 per million tokens
         cacheReadsPrice: 0.3, // $0.30 per million tokens
     },
-    "knight-3-opus-20240229": {
+    "claude-3-opus-20240229": {
         maxTokens: 4096,
         contextWindow: 200_000,
         supportsImages: true,
@@ -20,7 +20,7 @@ export const anthropicModels = {
         cacheWritesPrice: 18.75,
         cacheReadsPrice: 1.5,
     },
-    "knight-3-haiku-20240307": {
+    "claude-3-haiku-20240307": {
         maxTokens: 4096,
         contextWindow: 200_000,
         supportsImages: true,
@@ -31,9 +31,9 @@ export const anthropicModels = {
         cacheReadsPrice: 0.03,
     },
 }; // as const assertion makes the object deeply readonly
-export const bedrockDefaultModelId = "anthropic.knight-3-5-sonnet-20240620-v1:0";
+export const bedrockDefaultModelId = "anthropic.claude-3-5-sonnet-20240620-v1:0";
 export const bedrockModels = {
-    "anthropic.knight-3-5-sonnet-20240620-v1:0": {
+    "anthropic.claude-3-5-sonnet-20240620-v1:0": {
         maxTokens: 8192,
         contextWindow: 200_000,
         supportsImages: true,
@@ -41,7 +41,7 @@ export const bedrockModels = {
         inputPrice: 3.0,
         outputPrice: 15.0,
     },
-    "anthropic.knight-3-opus-20240229-v1:0": {
+    "anthropic.claude-3-opus-20240229-v1:0": {
         maxTokens: 4096,
         contextWindow: 200_000,
         supportsImages: true,
@@ -49,7 +49,7 @@ export const bedrockModels = {
         inputPrice: 15.0,
         outputPrice: 75.0,
     },
-    "anthropic.knight-3-haiku-20240307-v1:0": {
+    "anthropic.claude-3-haiku-20240307-v1:0": {
         maxTokens: 4096,
         contextWindow: 200_000,
         supportsImages: true,
@@ -58,9 +58,9 @@ export const bedrockModels = {
         outputPrice: 1.25,
     },
 };
-export const openRouterDefaultModelId = "anthropic/knight-3.5-sonnet:beta";
+export const openRouterDefaultModelId = "anthropic/claude-3.5-sonnet:beta";
 export const openRouterModels = {
-    "anthropic/knight-3.5-sonnet:beta": {
+    "anthropic/claude-3.5-sonnet:beta": {
         maxTokens: 8192,
         contextWindow: 200_000,
         supportsImages: true,
@@ -70,7 +70,7 @@ export const openRouterModels = {
         cacheWritesPrice: 3.75,
         cacheReadsPrice: 0.3,
     },
-    "anthropic/knight-3-opus:beta": {
+    "anthropic/claude-3-opus:beta": {
         maxTokens: 4096,
         contextWindow: 200_000,
         supportsImages: true,
@@ -80,7 +80,7 @@ export const openRouterModels = {
         cacheWritesPrice: 18.75,
         cacheReadsPrice: 1.5,
     },
-    "anthropic/knight-3-haiku:beta": {
+    "anthropic/claude-3-haiku:beta": {
         maxTokens: 4096,
         contextWindow: 200_000,
         supportsImages: true,
@@ -213,9 +213,9 @@ export const openRouterModels = {
     // 	outputPrice: 1.5,
     // },
 };
-export const vertexDefaultModelId = "knight-3-5-sonnet@20240620";
+export const vertexDefaultModelId = "claude-3-5-sonnet@20240620";
 export const vertexModels = {
-    "knight-3-5-sonnet@20240620": {
+    "claude-3-5-sonnet@20240620": {
         maxTokens: 8192,
         contextWindow: 200_000,
         supportsImages: true,
@@ -223,7 +223,7 @@ export const vertexModels = {
         inputPrice: 3.0,
         outputPrice: 15.0,
     },
-    "knight-3-opus@20240229": {
+    "claude-3-opus@20240229": {
         maxTokens: 4096,
         contextWindow: 200_000,
         supportsImages: true,
@@ -231,7 +231,7 @@ export const vertexModels = {
         inputPrice: 15.0,
         outputPrice: 75.0,
     },
-    "knight-3-haiku@20240307": {
+    "claude-3-haiku@20240307": {
         maxTokens: 4096,
         contextWindow: 200_000,
         supportsImages: true,
